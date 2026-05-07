@@ -1488,14 +1488,193 @@
     margin-top: 6px;
   }
   .code-cells.error ~ .code-error { display: block; }
+
+  /* =========================================================
+     LANDING SCREEN (escolha de fluxo)
+     ========================================================= */
+  #screen-landing {
+    background: linear-gradient(180deg, #FFFFFF 0%, #EEF0F3 100%);
+    min-height: 100vh;
+  }
+  .landing-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+  }
+  .landing-card {
+    background: #FFFFFF;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+  }
+  @media (max-width: 480px) {
+    .landing-card { padding: 36px 24px; }
+  }
+  .landing-logo {
+    display: block;
+  }
+  .landing-logo svg {
+    height: 44px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  .landing-byline {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: .2px;
+  }
+  .landing-byline svg {
+    height: 18px;
+    width: auto;
+    display: block;
+  }
+  .landing-divider {
+    height: 1px;
+    background: var(--border-soft);
+    margin: 28px 0 22px 0;
+  }
+  .landing-prompt {
+    font-size: 14px;
+    color: var(--text-soft);
+    margin: 0 0 18px 0;
+    line-height: 1.5;
+  }
+  .landing-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .landing-cta {
+    text-align: left;
+    padding: 18px 20px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all .15s ease;
+    cursor: pointer;
+  }
+  .landing-cta:hover {
+    border-color: var(--magalu-blue);
+    background: #F8FBFF;
+    box-shadow: 0 4px 16px rgba(0,134,255,.10);
+    transform: translateY(-1px);
+  }
+  .landing-cta-content { flex: 1; min-width: 0; }
+  .landing-cta-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0F1419;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    line-height: 1.3;
+  }
+  .landing-cta-sub {
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .landing-cta-arrow {
+    color: var(--text-muted);
+    flex: 0 0 auto;
+    transition: transform .15s ease, color .15s ease;
+  }
+  .landing-cta:hover .landing-cta-arrow {
+    color: var(--magalu-blue);
+    transform: translateX(2px);
+  }
+  .landing-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--green-50);
+    color: #0E7C25;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+  }
+  .landing-foot {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
 </style>
 </head>
 <body>
 
 <!-- =========================================================
+     SCREEN 0: LANDING (escolha de fluxo)
+========================================================= -->
+<div id="screen-landing" class="screen active">
+  <div class="landing-wrap">
+    <div class="landing-card">
+      <div class="magalu-logo landing-logo" aria-label="Magazine Luiza">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1987 427.2"><path d="M549.8-80.7h-13.3c-3.8 0-6.1 2.3-6.1 6V-36c0 14.2-7.8 22.2-18.6 22.2C500.5-13.7 494-21 494-35v-39.6c0-3.7-2.3-6-6.1-6h-13.3c-3.8 0-6.1 2.3-6.1 6v41.5c0 26.4 13.9 41.3 34.7 41.3 12.5 0 22.2-4.1 29-12.5l1.1 5.2c.8 3.4 3 5.2 6.6 5.2h9.7c3.8 0 6.1-2.3 6.1-6v-74.8c.2-3.7-2.1-6-5.9-6zm-92.6 64h-23.9c-8.3 0-12.7-4.3-12.7-12.5v-45.4c0-3.7-2.3-6-6.1-6h-13.7c-3.8 0-6.1 2.3-6.1 6V-26c0 20 12.3 32.2 32.7 32.2h29.8c3.8 0 6.1-2.3 6.1-6v-10.9c0-3.8-2.3-6-6.1-6zM70.4-74.9c-.4-3.9-2.5-5.8-6.3-5.8h-10c-3.2 0-5.5 1.3-7.2 4.1L22.4-35.8-.4-76.5c-1.5-2.8-4-4.1-7.2-4.1h-10.8c-3.8 0-5.9 1.9-6.3 5.8L-31 0c-.4 4.1 1.7 6.2 5.7 6.2h12.2C-9.3 6.2-7 4.3-6.8.4l2.7-41.9 14.6 26c1.5 2.8 4 4.1 7.2 4.1H26c3.2 0 5.5-1.1 7.2-4.1l16.5-27.9L51.6.3c.2 4 2.3 5.8 6.1 5.8h13.1c4 0 6.1-2.1 5.7-6.2l-6.1-74.8zm306.7-5.8h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.7-11.8-23.9 0-41.6 18.5-41.6 45.2 0 26.2 16.5 45.6 40 45.6 14.8 0 24.5-6.2 30.4-12.5l1 5.2c.6 3.4 2.9 5.2 6.5 5.2h10.1c3.8 0 6.1-2.3 6.1-6v-74.8c-.1-3.5-2.4-5.8-6.2-5.8zm-40.8 67c-13.5 0-22-9.2-22-23.4 0-14.4 8.9-23.7 22-23.7 13.5 0 22 9.2 22 23.4 0 14.3-8.9 23.7-22 23.7zm-62.2-67h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.7-11.8-23.9 0-41.5 17.4-41.5 44.1 0 25.4 16.3 43.4 39.8 43.4 14.6 0 23.3-6 29.2-12.3v4.3c0 15-8.5 24.5-26.6 24.5-7.4 0-14.7-1.5-21.5-4.5-3.6-1.7-6.5-.9-8.2 2.6l-4.2 8.2c-1.7 3.4-1.1 6.2 2.1 8 10.1 5.6 22.4 7.9 34.3 7.9C261 43.4 280 24.9 280-.9v-73.8c.1-3.7-2.1-6-5.9-6zm-40.8 64.2c-13.1 0-22-8.6-22-21.9 0-14 9.3-22.4 22-22.4 13.1 0 22 7.7 22 22.1 0 12.8-9.3 22.2-22 22.2zM171-80.7h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.6-11.8-23.9 0-41.6 18.5-41.6 45.2 0 26.2 16.5 45.6 40 45.6 14.8 0 24.5-6.2 30.4-12.5l1 5.2c.6 3.4 2.9 5.2 6.5 5.2h9.9c3.8 0 6.1-2.3 6.1-6v-74.8c0-3.5-2.3-5.8-6.1-5.8zm-40.8 67c-13.5 0-22-9.2-22-23.4 0-14.4 8.9-23.7 22-23.7 13.5 0 22 9.2 22 23.4 0 14.3-8.9 23.7-22 23.7z" fill="#0e87fe" transform="matrix(3.38586 0 0 3.38586 104.827 280.06)"/></svg>
+      </div>
+
+      <div class="landing-divider"></div>
+
+      <p class="landing-prompt">Escolha qual fluxo você quer experimentar:</p>
+
+      <div class="landing-actions">
+        <button class="landing-cta" onclick="startFourXFlow()">
+          <div class="landing-cta-content">
+            <div class="landing-cta-title">
+              Pix parcelado sem juros
+              <span class="landing-badge">Sem juros</span>
+            </div>
+            <div class="landing-cta-sub">Pague em 4x sem juros, sem cartão.</div>
+          </div>
+          <svg class="landing-cta-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="landing-cta" onclick="startMainFlow()">
+          <div class="landing-cta-content">
+            <div class="landing-cta-title">Pix parcelado em até 12x</div>
+            <div class="landing-cta-sub">Parcele em até 1 + 12x. Sem cartão de crédito.</div>
+          </div>
+          <svg class="landing-cta-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <div class="landing-byline">
+        <span>pix parcelado by</span>
+        <svg viewBox="0 0 72 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Koin">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M31.0602 26.8657C36.8388 26.8657 41.499 22.1822 41.499 16.4035C41.499 10.6249 36.8155 5.94141 31.0602 5.94141C25.2815 5.94141 20.5981 10.6249 20.5981 16.4035C20.5981 22.1822 25.2815 26.8657 31.0602 26.8657ZM31.0602 22.1356C34.2058 22.1356 36.7922 19.5725 36.7922 16.4035C36.7922 13.2346 34.2291 10.6715 31.0602 10.6715C27.8913 10.6715 25.3282 13.2346 25.3282 16.4035C25.3282 19.5725 27.8913 22.1356 31.0602 22.1356Z" fill="#1E2728"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M49.7243 0H44.9942V3.96117H49.7243V0ZM44.9942 10.4388H42.501V6.45437H49.7243V26.3534H44.9942V10.4388Z" fill="#1E2728"/>
+          <path d="M58.4155 9.43655C59.5573 7.71228 61.3981 5.94141 64.3806 5.94141C69.3903 5.94141 71.8369 9.66956 71.8369 14.3997V26.3531H67.1068V15.4016C67.1068 12.6754 65.5223 10.6715 62.866 10.6715C60.0466 10.6715 58.3922 13.1181 58.3922 16.1472V26.3531H53.6621V6.45403H58.3922V9.43655H58.4155Z" fill="#1E2728"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M0.186401 6.45508V26.3541H4.9165V6.45508H0.186401ZM12.6291 13.9347L21.6 26.3774H15.6116L9.87961 18.6648L12.6291 13.9347Z" fill="#1E2728"/>
+          <path d="M1.18835 26.3532H6.66408L19.8524 3.96094H14.3767L1.18835 26.3532Z" fill="#14DD3E"/>
+        </svg>
+      </div>
+
+      <div class="landing-foot">Mockup demonstrativo · dados simulados</div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
      SCREEN 1: CHECKOUT
 ========================================================= -->
-<div id="screen-checkout" class="screen active">
+<div id="screen-checkout" class="screen">
 
   <header class="magalu-header">
     <div class="magalu-brand">
@@ -1657,7 +1836,7 @@
               </span>
             </label>
 
-            <button class="btn-primary" id="btnConfirmPlan" disabled onclick="goToPixScreen()">
+            <button class="btn-primary" id="btnConfirmPlan" disabled onclick="confirmInstallments()">
               Confirmar parcelamento
             </button>
             <button class="koin-back" onclick="backToData()">← Voltar para dados do pagador</button>
@@ -1679,7 +1858,7 @@
             <button class="btn-primary" id="btnSendCode" disabled onclick="openFakeWhatsapp()">
               Enviar código pelo WhatsApp
             </button>
-            <button class="koin-back" onclick="backToData()">← Voltar para dados do pagador</button>
+            <button class="koin-back" onclick="backFromWhatsappEntry()">← Voltar</button>
           </div>
 
           <!-- STEP E: Code validation + terms (4x flow only) -->
@@ -1721,7 +1900,7 @@
               </span>
             </label>
 
-            <button class="btn-primary" id="btnContinue4x" disabled onclick="goToTimeline()">
+            <button class="btn-primary" id="btnContinue4x" disabled onclick="continueAfterCodeValidation()">
               Continuar
             </button>
           </div>
@@ -2067,8 +2246,8 @@
     </div>
 
     <div class="test-4x-cta" id="test4xCta">
-      <p class="label">Quer testar a versão alternativa?</p>
-      <button onclick="startFourXFlow()">Testar fluxo 4x sem juros</button>
+      <p class="label" id="test4xCtaLabel">Quer testar a versão alternativa?</p>
+      <button id="test4xCtaBtn" onclick="startAlternativeFlow()">Testar fluxo 4x sem juros</button>
     </div>
   </div>
 </div>
@@ -2339,14 +2518,11 @@ function renderInstallments() {
     const item = document.createElement('div');
     item.className = 'inst-item';
     item.dataset.id = plan.id;
-    const interestLabel = plan.interest === 'low' ? 'Juros reduzidos'
-                        : plan.interest === 'mid' ? 'Juros moderados'
-                        : 'Juros maiores';
     item.innerHTML = `
       <div class="inst-radio"></div>
       <div class="inst-main">
         <div class="inst-line1"><strong>Entrada + ${plan.parts}x</strong> de ${brl(plan.future)}</div>
-        <div class="inst-line2">${brl(plan.down)} hoje · Total ${brl(plan.total)} · ${interestLabel}</div>
+        <div class="inst-line2">${brl(plan.down)} hoje · Total ${brl(plan.total)}</div>
       </div>
     `;
     item.addEventListener('click', () => selectPlan(plan.id));
@@ -2378,6 +2554,37 @@ function selectPlan(id) {
 function updateConfirmState() {
   state.termsAccepted = document.getElementById('termsCheck').checked;
   document.getElementById('btnConfirmPlan').disabled = !(state.selectedPlan && state.termsAccepted);
+}
+
+/* ----------------------------------------------------------
+   CONFIRM INSTALLMENTS (fluxo main: vai para validação WhatsApp)
+---------------------------------------------------------- */
+function confirmInstallments() {
+  // Pré-preenche o número do WhatsApp com o telefone do pagador
+  const fWa = document.getElementById('f-whatsapp');
+  if (fWa && state.payer.phone && !fWa.value) {
+    fWa.value = state.payer.phone;
+    refreshWhatsappState();
+  }
+  showKoinStep('whatsappEntry');
+}
+
+/* Botão "Voltar" do step whatsappEntry: 4x volta para data, main volta para installments */
+function backFromWhatsappEntry() {
+  if (state.mode === '4x') {
+    showKoinStep('data');
+  } else {
+    showKoinStep('installments');
+  }
+}
+
+/* Botão "Continuar" depois do código validado: 4x → timeline, main → Pix */
+function continueAfterCodeValidation() {
+  if (state.mode === '4x') {
+    goToTimeline();
+  } else {
+    goToPixScreen();
+  }
 }
 
 /* ----------------------------------------------------------
@@ -2531,8 +2738,17 @@ function finalizeApproval() {
   document.getElementById('finalTotal').textContent = brl(p.total);
   document.getElementById('finalCustomerName').textContent = state.payer.name || 'Mariana Oliveira Santos';
 
-  // O CTA "Testar fluxo 4x sem juros" só aparece após o fluxo principal com juros
-  document.getElementById('test4xCta').style.display = is4x ? 'none' : '';
+  // CTA dinâmico: oferece o fluxo oposto ao que o usuário acabou de testar
+  const test4xCtaLabel = document.getElementById('test4xCtaLabel');
+  const test4xCtaBtn = document.getElementById('test4xCtaBtn');
+  if (is4x) {
+    test4xCtaLabel.textContent = 'Quer testar o fluxo com parcelamento em até 12x?';
+    test4xCtaBtn.textContent = 'Testar Pix parcelado em até 12x';
+  } else {
+    test4xCtaLabel.textContent = 'Quer testar o fluxo sem juros?';
+    test4xCtaBtn.textContent = 'Testar Pix parcelado sem juros';
+  }
+  document.getElementById('test4xCta').style.display = '';
 
   showScreen('screen-approved');
 }
@@ -2588,7 +2804,14 @@ function resetDemo(opts) {
   if (waLabel) waLabel.textContent = 'Copiar código';
 
   applyMode();
-  showScreen('screen-checkout');
+
+  // Padrão: volta para a landing. Os fluxos passam target:'checkout' para pular direto.
+  const target = opts.target || 'landing';
+  if (target === 'checkout') {
+    showScreen('screen-checkout');
+  } else {
+    showScreen('screen-landing');
+  }
 }
 
 /* ----------------------------------------------------------
@@ -2602,8 +2825,8 @@ function applyMode() {
   const btnSeeOptions = document.getElementById('btnSeeOptions');
 
   if (is4x) {
-    title.textContent = 'Pix Parcelado sem juros';
-    sub.textContent = 'Pague a entrada hoje e o restante em mais 3 pagamentos, sem juros.';
+    title.textContent = 'Parcele s/ juros no Pix';
+    sub.textContent = 'Pix parcelado sem cartão. Pague a primeira parcela, clique em continuar, aproveite sua compra e pague o restante das parcelas depois.';
     btnSeeOptions.textContent = 'Continuar';
   } else {
     title.textContent = 'Pix Parcelado';
@@ -2613,15 +2836,24 @@ function applyMode() {
 }
 
 /* ----------------------------------------------------------
-   START 4X FLOW (from approved screen CTA)
+   START FLOWS (a partir da landing ou do CTA pós-aprovação)
 ---------------------------------------------------------- */
 function startFourXFlow() {
-  resetDemo({ mode: '4x' });
-  // Abre automaticamente o card Koin para acelerar a demo
-  setTimeout(() => {
-    const trigger = document.getElementById('koinTrigger');
-    toggleKoin(trigger);
-  }, 200);
+  resetDemo({ mode: '4x', target: 'checkout' });
+}
+
+function startMainFlow() {
+  resetDemo({ mode: 'main', target: 'checkout' });
+}
+
+// Usado pelo CTA "Testar versão alternativa" na tela de aprovação:
+// se o fluxo atual foi 4x, oferece o de 12x (e vice-versa).
+function startAlternativeFlow() {
+  if (state.mode === '4x') {
+    startMainFlow();
+  } else {
+    startFourXFlow();
+  }
 }
 
 /* ----------------------------------------------------------
