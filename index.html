@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Checkout Magalu · Pix Parcelado · Koin (Mockup)</title>
+<style>
+  /* =========================================================
+     RESET + BASE
+     ========================================================= */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, Arial, sans-serif;
+    background: #EEF0F3;
+    color: #1F2937;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  input { font-family: inherit; }
+  a { color: inherit; }
+
+  /* =========================================================
+     TOKENS
+     ========================================================= */
+  :root {
+    --magalu-blue: #0086FF;
+    --magalu-blue-dark: #0066CC;
+    --magalu-blue-50: #E6F3FF;
+    --magalu-bg: #EEF0F3;
+    --green: #10B132;
+    --green-50: #E8F8EC;
+    --koin-black: #121718;
+    --koin-green: #10B132;
+    --text: #1F2937;
+    --text-soft: #6B7280;
+    --text-muted: #9CA3AF;
+    --border: #E5E7EB;
+    --border-soft: #F3F4F6;
+    --white: #FFFFFF;
+    --danger: #DC2626;
+    --warning: #F59E0B;
+    --shadow-sm: 0 1px 2px rgba(17,24,39,.04);
+    --shadow-md: 0 2px 8px rgba(17,24,39,.06);
+    --shadow-lg: 0 8px 24px rgba(17,24,39,.08);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+  }
+
+  /* =========================================================
+     LAYOUT
+     ========================================================= */
+  .magalu-header {
+    background: #FFFFFF;
+    padding: 18px 0 12px 0;
+  }
+  .magalu-brand {
+    max-width: 1200px;
+    margin: 0 auto 12px auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .magalu-logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .magalu-logo svg {
+    display: block;
+    height: 30px;
+    width: auto;
+  }
+  .demo-restart {
+    margin-left: auto;
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+    transition: all .15s ease;
+  }
+  .demo-restart:hover { background: #F9FAFB; }
+
+  /* Stepper */
+  .stepper-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 24px 32px 24px;
+  }
+  .stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 8px;
+    position: relative;
+  }
+  .step-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px solid #D1D5DB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9CA3AF;
+    background: #FFFFFF;
+    transition: all .25s ease;
+  }
+  .step-label {
+    font-size: 14px;
+    color: #9CA3AF;
+    font-weight: 500;
+  }
+  .step.completed .step-circle {
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .step.completed .step-label {
+    color: var(--green);
+    font-weight: 600;
+  }
+  .step.active .step-circle {
+    border-color: var(--magalu-blue);
+    color: var(--magalu-blue);
+  }
+  .step.active .step-label {
+    color: var(--magalu-blue);
+    font-weight: 600;
+  }
+  .step-bar {
+    flex: 1 1 auto;
+    height: 2px;
+    background: #D1D5DB;
+    margin: 0 -2px;
+    align-self: flex-start;
+    margin-top: 27px;
+    min-width: 60px;
+    transition: background .25s ease;
+  }
+  .step-bar.completed { background: var(--green); }
+  .step-bar.active { background: var(--magalu-blue); }
+
+  /* Main grid */
+  .checkout-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 64px 24px;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 24px;
+  }
+  .col-side { margin-top: 62px; }
+  @media (max-width: 960px) {
+    .checkout-main { grid-template-columns: 1fr; }
+    .col-side { margin-top: 0; }
+  }
+  .col-main h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0F1419;
+    margin: 8px 0 20px 0;
+    letter-spacing: -0.5px;
+  }
+
+  /* =========================================================
+     PAYMENT METHOD CARDS
+     ========================================================= */
+  .pay-list { display: flex; flex-direction: column; }
+  .pay-list > * { margin-bottom: 20px; }
+  .pay-list > *:last-child { margin-bottom: 0; }
+  .koin-container:not(.open) { margin-bottom: 0; }
+  .pay-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all .15s ease;
+    border: 2px solid transparent;
+  }
+  .pay-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
+  }
+  .pay-card.selected {
+    border-color: var(--magalu-blue);
+    box-shadow: 0 0 0 4px rgba(0,134,255,.08), var(--shadow-md);
+  }
+  .pay-card.disabled {
+    opacity: .5;
+    pointer-events: none;
+  }
+  .pay-icon {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4B5563;
+  }
+  .pay-icon.pix { color: #4B5563; }
+  .pay-body { flex: 1; min-width: 0; }
+  .pay-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1F2937;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pay-sub {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text-soft);
+  }
+  .pay-sub.tag-pill {
+    display: inline-block;
+    background: var(--magalu-blue-50);
+    color: var(--magalu-blue);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-top: 6px;
+  }
+  .pay-chevron { color: #9CA3AF; flex: 0 0 auto; }
+  .pay-card.expanded .pay-chevron { transform: rotate(90deg); }
+
+  .badge-novo {
+    background: var(--magalu-blue);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    letter-spacing: .2px;
+  }
+
+  .pay-card.koin .pay-icon svg { width: 40px; height: 40px; display: block; }
+  .pay-card.boleto + .pay-card.boleto-hidden { display: none; }
+
+  /* "Pagar com 2 cartões" + "Boleto" combined card variation, like the screenshot */
+  .pay-stack {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+  }
+  .pay-stack .pay-card {
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .pay-stack .pay-card:last-child { border-bottom: none; }
+  .pay-stack .pay-card:hover { transform: none; box-shadow: none; background: #FAFBFC; }
+
+  /* =========================================================
+     KOIN CONTAINER
+     ========================================================= */
+  .koin-container {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .35s ease;
+  }
+  .koin-container.open {
+    max-height: 2400px;
+  }
+  .koin-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-soft);
+    background: linear-gradient(180deg, #FAFBFC 0%, #FFFFFF 100%);
+  }
+  .koin-header-text { flex: 1; min-width: 0; }
+  .koin-header-sub {
+    font-size: 13px;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.4;
+  }
+  .koin-secure {
+    font-size: 11px;
+    color: var(--text-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-50);
+    color: #0E7C25;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+  .koin-body { padding: 24px; }
+  .koin-step-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0F1419;
+    margin: 0 0 4px 0;
+  }
+  .koin-step-sub {
+    font-size: 13px;
+    color: var(--text-soft);
+    margin: 0 0 18px 0;
+  }
+
+  /* Form fields */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 16px;
+  }
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .field input {
+    height: 44px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0 14px;
+    font-size: 14px;
+    color: var(--text);
+    background: #FFFFFF;
+    transition: border-color .15s ease, box-shadow .15s ease;
+    outline: none;
+  }
+  .field input:focus {
+    border-color: var(--magalu-blue);
+    box-shadow: 0 0 0 4px rgba(0,134,255,.10);
+  }
+  .field.error input {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px rgba(220,38,38,.08);
+  }
+  .field-error {
+    display: none;
+    font-size: 12px;
+    color: var(--danger);
+    margin-top: 2px;
+  }
+  .field.error .field-error { display: block; }
+
+  /* Primary button */
+  .btn-primary {
+    background: var(--magalu-blue);
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 24px;
+    border-radius: 999px;
+    transition: all .15s ease;
+    width: 100%;
+    margin-top: 18px;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--magalu-blue-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  .btn-primary:disabled {
+    background: #D1D5DB;
+    color: #FFFFFF;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #FFFFFF;
+    color: var(--magalu-blue);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 1.5px solid var(--magalu-blue);
+    transition: all .15s ease;
+  }
+  .btn-secondary:hover { background: var(--magalu-blue-50); }
+  .btn-link {
+    color: var(--magalu-blue);
+    background: transparent;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 6px 0;
+    text-decoration: none;
+  }
+  .btn-link:hover { text-decoration: underline; }
+
+  /* Loading state */
+  .koin-loading {
+    padding: 56px 24px;
+    text-align: center;
+  }
+  .spinner {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 3px solid var(--border);
+    border-top-color: var(--koin-green);
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .koin-loading h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0F1419;
+    margin: 0 0 4px 0;
+  }
+  .koin-loading p {
+    font-size: 13px;
+    color: var(--text-soft);
+    margin: 0;
+  }
+
+  /* Installments */
+  .summary-strip {
+    background: #F8F9FB;
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .summary-strip .label { font-size: 12px; color: var(--text-soft); }
+  .summary-strip .value { font-size: 18px; font-weight: 700; color: #0F1419; }
+
+  .installments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 380px;
+    overflow-y: auto;
+    padding: 2px;
+  }
+  .installments-list::-webkit-scrollbar { width: 8px; }
+  .installments-list::-webkit-scrollbar-thumb {
+    background: #D1D5DB; border-radius: 8px;
+  }
+  .inst-item {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    align-items: center;
+    cursor: pointer;
+    transition: all .15s ease;
+    background: #FFFFFF;
+  }
+  .inst-item:hover { border-color: #B5D6FF; background: #FBFDFF; }
+  .inst-item.selected {
+    border-color: var(--magalu-blue);
+    background: #F4F9FF;
+    box-shadow: 0 0 0 3px rgba(0,134,255,.08);
+  }
+  .inst-radio {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #D1D5DB;
+    flex: 0 0 20px;
+    position: relative;
+    transition: border-color .15s ease;
+  }
+  .inst-item.selected .inst-radio {
+    border-color: var(--magalu-blue);
+  }
+  .inst-item.selected .inst-radio::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: var(--magalu-blue);
+  }
+  .inst-main { display: flex; flex-direction: column; gap: 2px; }
+  .inst-line1 {
+    font-size: 14px;
+    color: #0F1419;
+    font-weight: 600;
+  }
+  .inst-line1 strong { color: var(--magalu-blue); }
+  .inst-line2 {
+    font-size: 12px;
+    color: var(--text-soft);
+  }
+  .inst-total {
+    text-align: right;
+  }
+  .inst-total .t-label { font-size: 11px; color: var(--text-soft); }
+  .inst-total .t-value { font-size: 14px; font-weight: 700; color: #0F1419; }
+  .interest-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .interest-tag.low { background: var(--green-50); color: #0E7C25; }
+  .interest-tag.mid { background: #FFF7E6; color: #B45309; }
+  .interest-tag.high { background: #FEE2E2; color: #B91C1C; }
+
+  .koin-summary-box {
+    margin-top: 18px;
+    border: 1.5px dashed #C9D8E8;
+    border-radius: 12px;
+    padding: 16px;
+    background: #F8FBFF;
+  }
+  .koin-summary-box .row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 13px; padding: 4px 0;
+  }
+  .koin-summary-box .row.total {
+    border-top: 1px dashed #B5D6FF;
+    margin-top: 8px;
+    padding-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0F1419;
+  }
+  .koin-summary-box .row .label { color: var(--text-soft); }
+  .koin-summary-box .row .val { color: #0F1419; font-weight: 600; }
+
+  .terms {
+    margin-top: 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.45;
+  }
+  .terms input {
+    width: 18px; height: 18px; flex: 0 0 18px;
+    accent-color: var(--magalu-blue);
+    margin-top: 2px;
+  }
+  .terms a { color: var(--magalu-blue); text-decoration: underline; }
+
+  .koin-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .koin-actions .btn-primary { margin-top: 18px; }
+  .koin-back {
+    background: transparent;
+    color: var(--text-soft);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 0;
+    margin-top: 12px;
+  }
+  .koin-back:hover { color: var(--text); }
+
+  /* =========================================================
+     SUMMARY (right column)
+     ========================================================= */
+  .summary-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 20px 22px;
+  }
+  .coupon-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--green-50);
+    padding: 10px 12px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+  .coupon-row .icon { color: var(--green); }
+  .coupon-row .label { flex: 1; font-size: 13px; color: var(--text); font-weight: 500; }
+  .coupon-row .insert { color: var(--green); font-weight: 700; font-size: 13px; cursor: pointer; }
+  .summary-line {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 14px; color: var(--text); padding: 4px 0;
+  }
+  .summary-line.total {
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-soft);
+    font-size: 18px;
+    font-weight: 700;
+    color: #0F1419;
+  }
+  .summary-line .lbl { color: var(--text-soft); }
+  .summary-line.total .lbl { color: #0F1419; }
+
+  /* =========================================================
+     SCREEN: PIX DOWN PAYMENT
+     ========================================================= */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .pix-screen {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+  .pix-banner {
+    background: linear-gradient(135deg, #0F4C81 0%, #0086FF 100%);
+    color: #FFFFFF;
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-md);
+  }
+  .pix-banner > div:nth-child(2) { flex: 1; min-width: 0; }
+  .pix-banner-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(255,255,255,.18);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 56px;
+  }
+  .pix-banner h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -.4px;
+  }
+  .pix-banner p {
+    margin: 4px 0 0 0;
+    font-size: 14px;
+    opacity: .92;
+  }
+  .pix-banner .badge {
+    margin-left: auto;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.4);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .pix-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+    gap: 24px;
+  }
+  @media (max-width: 1024px) { .pix-grid { grid-template-columns: minmax(0, 1fr); } }
+
+  .pix-card {
+    background: #FFFFFF;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 24px;
+  }
+  .pix-card h3 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0F1419;
+  }
+  .pix-card .sub {
+    margin: 0 0 18px 0;
+    font-size: 13px;
+    color: var(--text-soft);
+  }
+
+  .timer-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #FFF7E6;
+    border: 1px solid #FCD34D;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+  }
+  .timer-box .icon { color: #B45309; }
+  .timer-box .text { font-size: 13px; color: #78350F; flex: 1; min-width: 0; }
+  .timer-box .timer {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: #B45309;
+    letter-spacing: .5px;
+  }
+  .timer-box.expired { background: #FEE2E2; border-color: #FCA5A5; }
+  .timer-box.expired .icon, .timer-box.expired .timer, .timer-box.expired .text { color: #B91C1C; }
+
+  .qr-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px;
+    background: #FAFBFC;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+  .qr-canvas {
+    background: #FFFFFF;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .copy-block {
+    margin-top: 16px;
+  }
+  .copy-block label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-bottom: 6px;
+  }
+  .copy-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    min-width: 0;
+  }
+  .copy-input {
+    width: 100%;
+    min-width: 0;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: var(--text);
+    background: #F9FAFB;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    user-select: all;
+  }
+  .copy-btn {
+    background: var(--koin-black);
+    color: #FFFFFF;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background .15s ease;
+    width: 100%;
+  }
+  .copy-btn:hover { background: #000; }
+  .copy-btn.copied { background: var(--koin-green); }
+
+  .pix-info-note {
+    margin-top: 16px;
+    background: #F4F9FF;
+    border: 1px solid #C9DDF5;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #1E40AF;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .pix-info-note .icon { flex: 0 0 16px; margin-top: 1px; }
+
+  .order-summary h3 { margin-bottom: 12px; }
+  .order-line {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 13px; padding: 5px 0;
+    color: var(--text);
+  }
+  .order-line .lbl { color: var(--text-soft); }
+  .order-section {
+    border-top: 1px dashed #E5E7EB;
+    padding-top: 10px;
+    margin-top: 10px;
+  }
+  .order-product {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px dashed #E5E7EB;
+    margin-bottom: 8px;
+  }
+  .product-thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #E8F1FA 0%, #D5E5F5 100%);
+    flex: 0 0 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0F4C81;
+    font-size: 22px;
+  }
+  .product-info { flex: 1; min-width: 0; }
+  .product-name { font-size: 13px; font-weight: 600; color: #0F1419; line-height: 1.35; }
+  .product-meta { font-size: 12px; color: var(--text-soft); margin-top: 2px; }
+
+  .plan-badge {
+    margin-top: 12px;
+    padding: 12px;
+    background: #F4F9FF;
+    border: 1px dashed #B5D6FF;
+    border-radius: 10px;
+  }
+  .plan-badge .top {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--magalu-blue);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .plan-badge .row {
+    display: flex; justify-content: space-between;
+    font-size: 13px; color: var(--text); padding: 2px 0;
+  }
+  .plan-badge .row .v { font-weight: 600; color: #0F1419; }
+  .plan-badge .row.total {
+    margin-top: 6px; padding-top: 8px;
+    border-top: 1px solid #C9DDF5;
+    font-weight: 700;
+  }
+
+  /* =========================================================
+     SCREEN: APPROVED
+     ========================================================= */
+  .approved-screen {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 32px 24px 64px 24px;
+  }
+  .approved-hero {
+    text-align: center;
+    padding: 32px 24px;
+  }
+  .approved-check {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #FFFFFF;
+    margin: 0 auto 18px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 8px rgba(16,177,50,.12);
+    animation: pop .4s ease-out;
+  }
+  @keyframes pop {
+    0% { transform: scale(.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .approved-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0F1419;
+    letter-spacing: -.5px;
+    margin: 0 0 10px 0;
+  }
+  .approved-msg {
+    font-size: 15px;
+    color: var(--text-soft);
+    margin: 0;
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+
+  .order-progress {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 24px;
+    margin-top: 24px;
+  }
+  .order-progress h3 { margin: 0 0 16px 0; font-size: 16px; }
+  .progress-track {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 8px 8px 0 8px;
+  }
+  .progress-track::before {
+    content: "";
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    height: 3px;
+    background: #E5E7EB;
+    border-radius: 999px;
+    z-index: 0;
+  }
+  .progress-track::after {
+    content: "";
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    height: 3px;
+    width: calc((100% - 32px) * 0.25);
+    background: var(--green);
+    border-radius: 999px;
+    z-index: 0;
+  }
+  .progress-step {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+  .progress-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #E5E7EB;
+    color: #9CA3AF;
+    display: flex; align-items: center; justify-content: center;
+    border: 3px solid #FFFFFF;
+    box-shadow: 0 0 0 1px #E5E7EB;
+  }
+  .progress-step.completed .progress-dot {
+    background: var(--green);
+    color: #FFFFFF;
+    box-shadow: 0 0 0 1px var(--green);
+  }
+  .progress-label {
+    font-size: 11px;
+    color: var(--text-soft);
+    text-align: center;
+    margin-top: 8px;
+    line-height: 1.3;
+    max-width: 90px;
+  }
+  .progress-step.completed .progress-label { color: #0F1419; font-weight: 600; }
+
+  .approved-summary {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 24px;
+    margin-top: 16px;
+  }
+  .approved-summary h3 { margin: 0 0 12px 0; font-size: 16px; }
+  .approved-summary .row {
+    display: flex; justify-content: space-between; gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dashed #E5E7EB;
+    font-size: 14px;
+  }
+  .approved-summary .row:last-child { border-bottom: none; }
+  .approved-summary .row .lbl { color: var(--text-soft); }
+  .approved-summary .row .val { color: #0F1419; font-weight: 600; text-align: right; }
+
+  .approved-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  .approved-actions .btn-primary { width: auto; min-width: 200px; margin-top: 0; }
+
+  .next-installments-note {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: #F8F9FB;
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--text-soft);
+    text-align: center;
+    line-height: 1.5;
+  }
+  .next-installments-note strong { color: #0F1419; }
+
+  /* =========================================================
+     UTILS
+     ========================================================= */
+  .fade-in { animation: fadeIn .25s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #0F1419;
+    color: #FFFFFF;
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition: all .25s ease;
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     SCREEN 1: CHECKOUT
+========================================================= -->
+<div id="screen-checkout" class="screen active">
+
+  <header class="magalu-header">
+    <div class="magalu-brand">
+      <a class="magalu-logo" href="#" aria-label="Magazine Luiza" onclick="event.preventDefault();">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1987 427.2"><path d="M549.8-80.7h-13.3c-3.8 0-6.1 2.3-6.1 6V-36c0 14.2-7.8 22.2-18.6 22.2C500.5-13.7 494-21 494-35v-39.6c0-3.7-2.3-6-6.1-6h-13.3c-3.8 0-6.1 2.3-6.1 6v41.5c0 26.4 13.9 41.3 34.7 41.3 12.5 0 22.2-4.1 29-12.5l1.1 5.2c.8 3.4 3 5.2 6.6 5.2h9.7c3.8 0 6.1-2.3 6.1-6v-74.8c.2-3.7-2.1-6-5.9-6zm-92.6 64h-23.9c-8.3 0-12.7-4.3-12.7-12.5v-45.4c0-3.7-2.3-6-6.1-6h-13.7c-3.8 0-6.1 2.3-6.1 6V-26c0 20 12.3 32.2 32.7 32.2h29.8c3.8 0 6.1-2.3 6.1-6v-10.9c0-3.8-2.3-6-6.1-6zM70.4-74.9c-.4-3.9-2.5-5.8-6.3-5.8h-10c-3.2 0-5.5 1.3-7.2 4.1L22.4-35.8-.4-76.5c-1.5-2.8-4-4.1-7.2-4.1h-10.8c-3.8 0-5.9 1.9-6.3 5.8L-31 0c-.4 4.1 1.7 6.2 5.7 6.2h12.2C-9.3 6.2-7 4.3-6.8.4l2.7-41.9 14.6 26c1.5 2.8 4 4.1 7.2 4.1H26c3.2 0 5.5-1.1 7.2-4.1l16.5-27.9L51.6.3c.2 4 2.3 5.8 6.1 5.8h13.1c4 0 6.1-2.1 5.7-6.2l-6.1-74.8zm306.7-5.8h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.7-11.8-23.9 0-41.6 18.5-41.6 45.2 0 26.2 16.5 45.6 40 45.6 14.8 0 24.5-6.2 30.4-12.5l1 5.2c.6 3.4 2.9 5.2 6.5 5.2h10.1c3.8 0 6.1-2.3 6.1-6v-74.8c-.1-3.5-2.4-5.8-6.2-5.8zm-40.8 67c-13.5 0-22-9.2-22-23.4 0-14.4 8.9-23.7 22-23.7 13.5 0 22 9.2 22 23.4 0 14.3-8.9 23.7-22 23.7zm-62.2-67h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.7-11.8-23.9 0-41.5 17.4-41.5 44.1 0 25.4 16.3 43.4 39.8 43.4 14.6 0 23.3-6 29.2-12.3v4.3c0 15-8.5 24.5-26.6 24.5-7.4 0-14.7-1.5-21.5-4.5-3.6-1.7-6.5-.9-8.2 2.6l-4.2 8.2c-1.7 3.4-1.1 6.2 2.1 8 10.1 5.6 22.4 7.9 34.3 7.9C261 43.4 280 24.9 280-.9v-73.8c.1-3.7-2.1-6-5.9-6zm-40.8 64.2c-13.1 0-22-8.6-22-21.9 0-14 9.3-22.4 22-22.4 13.1 0 22 7.7 22 22.1 0 12.8-9.3 22.2-22 22.2zM171-80.7h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.6-11.8-23.9 0-41.6 18.5-41.6 45.2 0 26.2 16.5 45.6 40 45.6 14.8 0 24.5-6.2 30.4-12.5l1 5.2c.6 3.4 2.9 5.2 6.5 5.2h9.9c3.8 0 6.1-2.3 6.1-6v-74.8c0-3.5-2.3-5.8-6.1-5.8zm-40.8 67c-13.5 0-22-9.2-22-23.4 0-14.4 8.9-23.7 22-23.7 13.5 0 22 9.2 22 23.4 0 14.3-8.9 23.7-22 23.7z" fill="#0e87fe" transform="matrix(3.38586 0 0 3.38586 104.827 280.06)"/></svg>
+      </a>
+      <button class="demo-restart" onclick="resetDemo()">Reiniciar demo</button>
+    </div>
+
+    <div class="stepper-wrap">
+      <div class="stepper">
+        <div class="step completed">
+          <div class="step-circle">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <div class="step-label">Sacola</div>
+        </div>
+        <div class="step-bar completed"></div>
+        <div class="step completed">
+          <div class="step-circle">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div class="step-label">Entrega</div>
+        </div>
+        <div class="step-bar active"></div>
+        <div class="step active">
+          <div class="step-circle">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <div class="step-label">Pagamento</div>
+        </div>
+        <div class="step-bar"></div>
+        <div class="step">
+          <div class="step-circle">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+          </div>
+          <div class="step-label">Revisão</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="checkout-main">
+    <div class="col-main">
+      <h1>Escolha como pagar</h1>
+
+      <div class="pay-list" id="payList">
+
+        <!-- Pix -->
+        <div class="pay-card pix" data-method="pix" onclick="selectMethod(this)">
+          <div class="pay-icon pix">
+            <svg width="32" height="32" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="#32BCAD" d="M242.4 292.5C247.8 287.1 257.1 287.1 262.5 292.5L339.5 369.5C353.7 383.7 372.6 391.5 392.6 391.5H407.7L310.6 488.6C280.3 518.1 231.1 518.1 200.8 488.6L103.3 391.2H112.6C132.6 391.2 151.5 383.4 165.7 369.2L242.4 292.5zM262.5 218.9C256.1 224.4 247.9 224.5 242.4 218.9L165.7 142.2C151.5 127.1 132.6 120.2 112.6 120.2H103.3L200.7 22.76C231.1-7.586 280.3-7.586 310.6 22.76L407.8 119.9H392.6C372.6 119.9 353.7 127.7 339.5 141.9L262.5 218.9zM112.6 142.7C126.4 142.7 139.1 148.3 149.7 158.1L226.4 234.8C233.6 241.1 243 245.6 252.5 245.6C261.9 245.6 271.3 241.1 278.5 234.8L355.5 157.8C365.3 148.1 378.8 142.5 392.6 142.5H430.3L488.6 200.8C518.9 231.1 518.9 280.3 488.6 310.6L430.3 368.9H392.6C378.8 368.9 365.3 363.3 355.5 353.5L278.5 276.5C264.6 262.6 240.3 262.6 226.4 276.6L149.7 353.2C139.1 363 126.4 368.6 112.6 368.6H80.78L22.76 310.6C-7.586 280.3-7.586 231.1 22.76 200.8L80.78 142.7H112.6z"/></svg>
+          </div>
+          <div class="pay-body">
+            <div class="pay-title">Pix</div>
+            <span class="pay-sub tag-pill">Aprovação em minutos</span>
+          </div>
+          <svg class="pay-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+
+        <!-- Pix Parcelado Koin (NEW) -->
+        <div class="pay-card koin" id="koinTrigger" data-method="koin" onclick="toggleKoin(this)">
+          <div class="pay-icon">
+            <svg viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="128" height="128" rx="32" fill="#121718"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M32 35.5V95.5H46.2499V35.5H32ZM69.5 58L96.5 95.5H78.5L61.25 72.25L69.5 58Z" fill="white"/>
+              <path d="M74.75 28L35 95.5H51.5L91.25 28H74.75Z" fill="#14DD3E"/>
+            </svg>
+          </div>
+          <div class="pay-body">
+            <div class="pay-title">Pix Parcelado</div>
+            <div class="pay-sub">Parcele sua compra em até 1 + 12x. Sem cartão de crédito.</div>
+          </div>
+          <span class="badge-novo">Novo</span>
+          <svg class="pay-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+
+        <!-- Koin expansion container -->
+        <div class="koin-container" id="koinContainer">
+          <div class="koin-header">
+            <div class="koin-header-text">
+              <div class="koin-header-sub">Pague a entrada via Pix e o restante em parcelas mensais.</div>
+            </div>
+            <span class="koin-secure">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Análise segura
+            </span>
+          </div>
+
+          <!-- STEP A: form -->
+          <div class="koin-body" id="koinStepData">
+            <h3 class="koin-step-title">Dados do responsável pelo pagamento</h3>
+            <p class="koin-step-sub">Todos os campos são obrigatórios.</p>
+
+            <div class="form-grid">
+              <div class="field" data-field="cpf">
+                <label for="f-cpf">CPF</label>
+                <input id="f-cpf" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14" autocomplete="off" />
+                <span class="field-error">Informe um CPF válido.</span>
+              </div>
+              <div class="field" data-field="phone">
+                <label for="f-phone">Telefone celular</label>
+                <input id="f-phone" type="text" inputmode="numeric" placeholder="(00) 00000-0000" maxlength="15" autocomplete="off" />
+                <span class="field-error">Informe um celular válido.</span>
+              </div>
+              <div class="field full" data-field="name">
+                <label for="f-name">Nome completo</label>
+                <input id="f-name" type="text" placeholder="Ex: Maria Silva Santos" autocomplete="off" />
+                <span class="field-error">Informe o nome completo.</span>
+              </div>
+              <div class="field full" data-field="email">
+                <label for="f-email">E-mail do pagador</label>
+                <input id="f-email" type="email" placeholder="exemplo@email.com" autocomplete="off" />
+                <span class="field-error">Informe um e-mail válido.</span>
+              </div>
+            </div>
+
+            <button class="btn-primary" id="btnSeeOptions" disabled onclick="goToInstallments()">
+              Ver opções de parcelamento
+            </button>
+          </div>
+
+          <!-- STEP B: loading -->
+          <div class="koin-loading" id="koinStepLoading" style="display:none;">
+            <div class="spinner"></div>
+            <h3>Estamos buscando as melhores opções para você</h3>
+            <p>A Koin está analisando seus dados de forma segura.</p>
+          </div>
+
+          <!-- STEP C: installments -->
+          <div class="koin-body" id="koinStepInstallments" style="display:none;">
+            <h3 class="koin-step-title">Em quantas parcelas você quer pagar?</h3>
+            <p class="koin-step-sub">Você paga uma entrada via Pix e o restante em parcelas mensais.</p>
+
+            <div class="summary-strip">
+              <div>
+                <div class="label">Valor da compra</div>
+                <div class="value">R$ 520,00</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="label">CPF do pagador</div>
+                <div class="value" id="payerCpfDisplay" style="font-size:14px;">—</div>
+              </div>
+            </div>
+
+            <div class="installments-list" id="installmentsList"><!-- filled by JS --></div>
+
+            <div class="koin-summary-box" id="koinSelectedSummary" style="display:none;">
+              <div class="row"><span class="label">Entrada via Pix (hoje)</span><span class="val" id="sumDown">—</span></div>
+              <div class="row"><span class="label" id="sumFutureLabel">Parcelas futuras</span><span class="val" id="sumFutureValue">—</span></div>
+              <div class="row total"><span class="label">Total financiado</span><span class="val" id="sumTotal">—</span></div>
+            </div>
+
+            <label class="terms">
+              <input type="checkbox" id="termsCheck" onchange="updateConfirmState()" />
+              <span>
+                Li e aceito as <a href="#" onclick="event.preventDefault(); showToast('Mockup: link demonstrativo')">Políticas de Privacidade</a>
+                e os <a href="#" onclick="event.preventDefault(); showToast('Mockup: link demonstrativo')">Termos e Condições</a> da Koin.
+              </span>
+            </label>
+
+            <button class="btn-primary" id="btnConfirmPlan" disabled onclick="goToPixScreen()">
+              Confirmar parcelamento
+            </button>
+            <button class="koin-back" onclick="backToData()">← Voltar para dados do pagador</button>
+          </div>
+
+        </div>
+
+        <!-- Novo cartão -->
+        <div class="pay-card" data-method="card" onclick="selectMethod(this)">
+          <div class="pay-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M18 16h2"/></svg>
+          </div>
+          <div class="pay-body">
+            <div class="pay-title">Novo cartão de crédito</div>
+          </div>
+          <svg class="pay-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+
+        <!-- Stack 2 cartões + Boleto -->
+        <div class="pay-stack">
+          <div class="pay-card" data-method="2cards" onclick="selectMethod(this)">
+            <div class="pay-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="14" height="10" rx="2"/><rect x="7" y="11" width="14" height="10" rx="2"/></svg>
+            </div>
+            <div class="pay-body">
+              <div class="pay-title">Pagar com 2 cartões</div>
+              <div class="pay-sub">Pagamento mínimo de R$ 20,00</div>
+            </div>
+            <span class="badge-novo">Novo</span>
+            <svg class="pay-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="pay-card" data-method="boleto" onclick="selectMethod(this)">
+            <div class="pay-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h2v14H3zM7 5h1v14H7zM10 5h2v14h-2zM14 5h1v14h-1zM17 5h2v14h-2zM21 5v14"/></svg>
+            </div>
+            <div class="pay-body">
+              <div class="pay-title">Boleto bancário</div>
+              <div class="pay-sub">Aprovação em até 3 dias</div>
+            </div>
+            <svg class="pay-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right column: summary -->
+    <aside class="col-side">
+      <div class="summary-card">
+        <div class="coupon-row">
+          <span class="icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v4a2 2 0 0 1 0 4v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4a2 2 0 0 1 0-4z"/><line x1="13" y1="6" x2="13" y2="18" stroke-dasharray="2 2"/></svg>
+          </span>
+          <span class="label">Tem um código de cupom?</span>
+          <span class="insert" onclick="showToast('Mockup: cupom é apenas demonstrativo')">Inserir</span>
+        </div>
+        <div class="summary-line"><span class="lbl">Subtotal (1 item)</span><span>R$ 469,90</span></div>
+        <div class="summary-line"><span class="lbl">Frete</span><span>R$ 29,90</span></div>
+        <div class="summary-line"><span class="lbl">Manuseio</span><span>R$ 20,20</span></div>
+        <div class="summary-line total"><span class="lbl">Total</span><span>R$ 520,00</span></div>
+      </div>
+
+      <div class="summary-card" style="margin-top:16px;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div class="product-thumb">📱</div>
+          <div class="product-info">
+            <div class="product-name">Smartphone Samsung Galaxy A55 5G 256GB</div>
+            <div class="product-meta">Preto · 1 unidade</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<!-- =========================================================
+     SCREEN 2: PIX DOWN PAYMENT
+========================================================= -->
+<div id="screen-pix" class="screen">
+  <header class="magalu-header">
+    <div class="magalu-brand">
+      <a class="magalu-logo" href="#" aria-label="Magazine Luiza" onclick="event.preventDefault();">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1987 427.2"><path d="M549.8-80.7h-13.3c-3.8 0-6.1 2.3-6.1 6V-36c0 14.2-7.8 22.2-18.6 22.2C500.5-13.7 494-21 494-35v-39.6c0-3.7-2.3-6-6.1-6h-13.3c-3.8 0-6.1 2.3-6.1 6v41.5c0 26.4 13.9 41.3 34.7 41.3 12.5 0 22.2-4.1 29-12.5l1.1 5.2c.8 3.4 3 5.2 6.6 5.2h9.7c3.8 0 6.1-2.3 6.1-6v-74.8c.2-3.7-2.1-6-5.9-6zm-92.6 64h-23.9c-8.3 0-12.7-4.3-12.7-12.5v-45.4c0-3.7-2.3-6-6.1-6h-13.7c-3.8 0-6.1 2.3-6.1 6V-26c0 20 12.3 32.2 32.7 32.2h29.8c3.8 0 6.1-2.3 6.1-6v-10.9c0-3.8-2.3-6-6.1-6zM70.4-74.9c-.4-3.9-2.5-5.8-6.3-5.8h-10c-3.2 0-5.5 1.3-7.2 4.1L22.4-35.8-.4-76.5c-1.5-2.8-4-4.1-7.2-4.1h-10.8c-3.8 0-5.9 1.9-6.3 5.8L-31 0c-.4 4.1 1.7 6.2 5.7 6.2h12.2C-9.3 6.2-7 4.3-6.8.4l2.7-41.9 14.6 26c1.5 2.8 4 4.1 7.2 4.1H26c3.2 0 5.5-1.1 7.2-4.1l16.5-27.9L51.6.3c.2 4 2.3 5.8 6.1 5.8h13.1c4 0 6.1-2.1 5.7-6.2l-6.1-74.8zm306.7-5.8h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.7-11.8-23.9 0-41.6 18.5-41.6 45.2 0 26.2 16.5 45.6 40 45.6 14.8 0 24.5-6.2 30.4-12.5l1 5.2c.6 3.4 2.9 5.2 6.5 5.2h10.1c3.8 0 6.1-2.3 6.1-6v-74.8c-.1-3.5-2.4-5.8-6.2-5.8zm-40.8 67c-13.5 0-22-9.2-22-23.4 0-14.4 8.9-23.7 22-23.7 13.5 0 22 9.2 22 23.4 0 14.3-8.9 23.7-22 23.7zm-62.2-67h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.7-11.8-23.9 0-41.5 17.4-41.5 44.1 0 25.4 16.3 43.4 39.8 43.4 14.6 0 23.3-6 29.2-12.3v4.3c0 15-8.5 24.5-26.6 24.5-7.4 0-14.7-1.5-21.5-4.5-3.6-1.7-6.5-.9-8.2 2.6l-4.2 8.2c-1.7 3.4-1.1 6.2 2.1 8 10.1 5.6 22.4 7.9 34.3 7.9C261 43.4 280 24.9 280-.9v-73.8c.1-3.7-2.1-6-5.9-6zm-40.8 64.2c-13.1 0-22-8.6-22-21.9 0-14 9.3-22.4 22-22.4 13.1 0 22 7.7 22 22.1 0 12.8-9.3 22.2-22 22.2zM171-80.7h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.6-11.8-23.9 0-41.6 18.5-41.6 45.2 0 26.2 16.5 45.6 40 45.6 14.8 0 24.5-6.2 30.4-12.5l1 5.2c.6 3.4 2.9 5.2 6.5 5.2h9.9c3.8 0 6.1-2.3 6.1-6v-74.8c0-3.5-2.3-5.8-6.1-5.8zm-40.8 67c-13.5 0-22-9.2-22-23.4 0-14.4 8.9-23.7 22-23.7 13.5 0 22 9.2 22 23.4 0 14.3-8.9 23.7-22 23.7z" fill="#0e87fe" transform="matrix(3.38586 0 0 3.38586 104.827 280.06)"/></svg>
+      </a>
+      <button class="demo-restart" onclick="resetDemo()">Reiniciar demo</button>
+    </div>
+  </header>
+
+  <div class="pix-screen">
+    <div class="pix-banner">
+      <div class="pix-banner-icon">
+        <svg width="28" height="28" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="#FFFFFF" d="M242.4 292.5C247.8 287.1 257.1 287.1 262.5 292.5L339.5 369.5C353.7 383.7 372.6 391.5 392.6 391.5H407.7L310.6 488.6C280.3 518.1 231.1 518.1 200.8 488.6L103.3 391.2H112.6C132.6 391.2 151.5 383.4 165.7 369.2L242.4 292.5zM262.5 218.9C256.1 224.4 247.9 224.5 242.4 218.9L165.7 142.2C151.5 127.1 132.6 120.2 112.6 120.2H103.3L200.7 22.76C231.1-7.586 280.3-7.586 310.6 22.76L407.8 119.9H392.6C372.6 119.9 353.7 127.7 339.5 141.9L262.5 218.9zM112.6 142.7C126.4 142.7 139.1 148.3 149.7 158.1L226.4 234.8C233.6 241.1 243 245.6 252.5 245.6C261.9 245.6 271.3 241.1 278.5 234.8L355.5 157.8C365.3 148.1 378.8 142.5 392.6 142.5H430.3L488.6 200.8C518.9 231.1 518.9 280.3 488.6 310.6L430.3 368.9H392.6C378.8 368.9 365.3 363.3 355.5 353.5L278.5 276.5C264.6 262.6 240.3 262.6 226.4 276.6L149.7 353.2C139.1 363 126.4 368.6 112.6 368.6H80.78L22.76 310.6C-7.586 280.3-7.586 231.1 22.76 200.8L80.78 142.7H112.6z"/></svg>
+      </div>
+      <div>
+        <h2>Seu pedido foi reservado</h2>
+        <p>Pague a entrada via Pix em até 20 minutos para confirmar seu pedido.</p>
+      </div>
+    </div>
+
+    <div class="pix-grid">
+      <div class="pix-card">
+        <div class="timer-box" id="timerBox">
+          <span class="icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </span>
+          <span class="text" id="timerText">Tempo restante para pagar a entrada:</span>
+          <span class="timer" id="timer">20:00</span>
+        </div>
+
+        <h3>Pague a entrada com Pix</h3>
+        <p class="sub">Abra o app do seu banco, escolha pagar com Pix e leia o QR Code abaixo, ou copie o código.</p>
+
+        <div class="qr-area">
+          <div class="qr-canvas" id="qrCanvas"><!-- SVG QR injetado por JS --></div>
+        </div>
+
+        <div class="copy-block">
+          <label>Pix copia e cola</label>
+          <div class="copy-row">
+            <div class="copy-input" id="pixCode">00020126580014BR.GOV.BCB.PIX0136f9f1f9f1-0000-4000-9000-koin-magalu520520400005303986540540.005802BR5925KOIN PAGAMENTOS LTDA6009SAO PAULO62100506MAGALU6304ABCD</div>
+            <button class="copy-btn" id="copyBtn" onclick="copyPix()">
+              <svg id="copyIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span id="copyLabel">Copiar código Pix</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="pix-info-note">
+          <span class="icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </span>
+          Apenas o titular do CPF informado poderá realizar o pagamento da entrada.
+        </div>
+      </div>
+
+      <div class="pix-card order-summary">
+        <h3>Resumo do pedido</h3>
+
+        <div class="order-product">
+          <div class="product-thumb">📱</div>
+          <div class="product-info">
+            <div class="product-name">Smartphone Samsung Galaxy A55 5G 256GB</div>
+            <div class="product-meta">Preto · 1 unidade · R$ 469,90</div>
+          </div>
+        </div>
+
+        <div class="order-section">
+          <div class="order-line"><span class="lbl">Subtotal</span><span>R$ 469,90</span></div>
+          <div class="order-line"><span class="lbl">Frete</span><span>R$ 29,90</span></div>
+          <div class="order-line"><span class="lbl">Manuseio</span><span>R$ 20,20</span></div>
+          <div class="order-line" style="font-weight:700; color:#0F1419;"><span>Total da compra</span><span>R$ 520,00</span></div>
+        </div>
+
+        <div class="order-section">
+          <div style="font-size:12px; color:var(--text-soft); font-weight:600; margin-bottom:6px;">Entrega</div>
+          <div style="font-size:13px; color:var(--text); line-height:1.5;">
+            <span id="pixCustomerName">—</span><br/>
+            Rua Harmonia, 245, Apto 82<br/>
+            Vila Madalena · São Paulo · SP<br/>
+            CEP 05435-000
+          </div>
+        </div>
+
+        <div class="plan-badge" id="planBadge">
+          <div class="top">
+            <svg width="18" height="18" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="128" height="128" rx="32" fill="#121718"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M32 35.5V95.5H46.2499V35.5H32ZM69.5 58L96.5 95.5H78.5L61.25 72.25L69.5 58Z" fill="white"/>
+              <path d="M74.75 28L35 95.5H51.5L91.25 28H74.75Z" fill="#14DD3E"/>
+            </svg>
+            Pix Parcelado · Koin
+          </div>
+          <div class="row"><span>Entrada hoje (Pix)</span><span class="v" id="planDown">—</span></div>
+          <div class="row"><span id="planFutureLabel">Parcelas futuras</span><span class="v" id="planFutureValue">—</span></div>
+          <div class="row total"><span>Total financiado</span><span class="v" id="planTotal">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     SCREEN 3: APPROVED
+========================================================= -->
+<div id="screen-approved" class="screen">
+  <header class="magalu-header">
+    <div class="magalu-brand">
+      <a class="magalu-logo" href="#" aria-label="Magazine Luiza" onclick="event.preventDefault();">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1987 427.2"><path d="M549.8-80.7h-13.3c-3.8 0-6.1 2.3-6.1 6V-36c0 14.2-7.8 22.2-18.6 22.2C500.5-13.7 494-21 494-35v-39.6c0-3.7-2.3-6-6.1-6h-13.3c-3.8 0-6.1 2.3-6.1 6v41.5c0 26.4 13.9 41.3 34.7 41.3 12.5 0 22.2-4.1 29-12.5l1.1 5.2c.8 3.4 3 5.2 6.6 5.2h9.7c3.8 0 6.1-2.3 6.1-6v-74.8c.2-3.7-2.1-6-5.9-6zm-92.6 64h-23.9c-8.3 0-12.7-4.3-12.7-12.5v-45.4c0-3.7-2.3-6-6.1-6h-13.7c-3.8 0-6.1 2.3-6.1 6V-26c0 20 12.3 32.2 32.7 32.2h29.8c3.8 0 6.1-2.3 6.1-6v-10.9c0-3.8-2.3-6-6.1-6zM70.4-74.9c-.4-3.9-2.5-5.8-6.3-5.8h-10c-3.2 0-5.5 1.3-7.2 4.1L22.4-35.8-.4-76.5c-1.5-2.8-4-4.1-7.2-4.1h-10.8c-3.8 0-5.9 1.9-6.3 5.8L-31 0c-.4 4.1 1.7 6.2 5.7 6.2h12.2C-9.3 6.2-7 4.3-6.8.4l2.7-41.9 14.6 26c1.5 2.8 4 4.1 7.2 4.1H26c3.2 0 5.5-1.1 7.2-4.1l16.5-27.9L51.6.3c.2 4 2.3 5.8 6.1 5.8h13.1c4 0 6.1-2.1 5.7-6.2l-6.1-74.8zm306.7-5.8h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.7-11.8-23.9 0-41.6 18.5-41.6 45.2 0 26.2 16.5 45.6 40 45.6 14.8 0 24.5-6.2 30.4-12.5l1 5.2c.6 3.4 2.9 5.2 6.5 5.2h10.1c3.8 0 6.1-2.3 6.1-6v-74.8c-.1-3.5-2.4-5.8-6.2-5.8zm-40.8 67c-13.5 0-22-9.2-22-23.4 0-14.4 8.9-23.7 22-23.7 13.5 0 22 9.2 22 23.4 0 14.3-8.9 23.7-22 23.7zm-62.2-67h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.7-11.8-23.9 0-41.5 17.4-41.5 44.1 0 25.4 16.3 43.4 39.8 43.4 14.6 0 23.3-6 29.2-12.3v4.3c0 15-8.5 24.5-26.6 24.5-7.4 0-14.7-1.5-21.5-4.5-3.6-1.7-6.5-.9-8.2 2.6l-4.2 8.2c-1.7 3.4-1.1 6.2 2.1 8 10.1 5.6 22.4 7.9 34.3 7.9C261 43.4 280 24.9 280-.9v-73.8c.1-3.7-2.1-6-5.9-6zm-40.8 64.2c-13.1 0-22-8.6-22-21.9 0-14 9.3-22.4 22-22.4 13.1 0 22 7.7 22 22.1 0 12.8-9.3 22.2-22 22.2zM171-80.7h-10.4c-3.6 0-6.1 1.9-6.6 5.4l-.6 4.3c-5.9-6.2-14.4-11.8-28.6-11.8-23.9 0-41.6 18.5-41.6 45.2 0 26.2 16.5 45.6 40 45.6 14.8 0 24.5-6.2 30.4-12.5l1 5.2c.6 3.4 2.9 5.2 6.5 5.2h9.9c3.8 0 6.1-2.3 6.1-6v-74.8c0-3.5-2.3-5.8-6.1-5.8zm-40.8 67c-13.5 0-22-9.2-22-23.4 0-14.4 8.9-23.7 22-23.7 13.5 0 22 9.2 22 23.4 0 14.3-8.9 23.7-22 23.7z" fill="#0e87fe" transform="matrix(3.38586 0 0 3.38586 104.827 280.06)"/></svg>
+      </a>
+      <button class="demo-restart" onclick="resetDemo()">Reiniciar demo</button>
+    </div>
+  </header>
+
+  <div class="approved-screen">
+    <div class="approved-hero">
+      <div class="approved-check">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h1 class="approved-title">Sua compra foi aprovada</h1>
+      <p class="approved-msg">
+        Recebemos o pagamento da entrada via Pix. As próximas parcelas chegarão no seu e-mail.
+        Você também pode acompanhá-las pelo app Koin.
+      </p>
+    </div>
+
+    <div class="order-progress">
+      <h3>Status do pedido</h3>
+      <div class="progress-track">
+        <div class="progress-step completed">
+          <div class="progress-dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="progress-label">Pedido feito</div>
+        </div>
+        <div class="progress-step completed">
+          <div class="progress-dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="progress-label">Entrada confirmada</div>
+        </div>
+        <div class="progress-step">
+          <div class="progress-dot">3</div>
+          <div class="progress-label">Em separação</div>
+        </div>
+        <div class="progress-step">
+          <div class="progress-dot">4</div>
+          <div class="progress-label">Saiu para entrega</div>
+        </div>
+        <div class="progress-step">
+          <div class="progress-dot">5</div>
+          <div class="progress-label">Entregue</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="approved-summary">
+      <h3>Detalhes do pedido</h3>
+      <div class="row"><span class="lbl">Número do pedido</span><span class="val">MAG-2026-00018472</span></div>
+      <div class="row"><span class="lbl">Cliente</span><span class="val" id="finalCustomerName">—</span></div>
+      <div class="row"><span class="lbl">Produto</span><span class="val">Smartphone Samsung Galaxy A55 5G 256GB</span></div>
+      <div class="row"><span class="lbl">Endereço de entrega</span><span class="val">Rua Harmonia, 245, Apto 82 · Vila Madalena · São Paulo · SP</span></div>
+      <div class="row"><span class="lbl">Forma de pagamento</span><span class="val">Pix Parcelado · Koin</span></div>
+      <div class="row"><span class="lbl">Plano de pagamento</span><span class="val" id="finalPlan">—</span></div>
+      <div class="row"><span class="lbl">Total financiado</span><span class="val" id="finalTotal">—</span></div>
+    </div>
+
+    <div class="next-installments-note">
+      As próximas parcelas serão enviadas para o e-mail <strong id="finalEmail">—</strong>.
+      Acompanhe e pague pelo app Koin sempre que preferir.
+    </div>
+
+    <div class="approved-actions">
+      <button class="btn-secondary" onclick="showToast('Mockup: detalhes do pedido (demo)')">Ver detalhes do pedido</button>
+      <button class="btn-secondary" onclick="showToast('Mockup: link para a loja do app Koin (demo)')">Baixar app Koin</button>
+      <button class="btn-primary" onclick="resetDemo()">Voltar para a loja</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Mensagem</div>
+
+<script>
+/* ============================================================
+   MOCKUP — Magalu × Koin Pix Parcelado
+   Single-file functional prototype.
+   Todos os dados, cálculos, validações e timers são simulados.
+============================================================ */
+
+const PURCHASE_AMOUNT = 520.0;
+
+// Plans replicating the JSON spec — values pre-computed there
+const INSTALLMENT_PLANS = [
+  { id: '2',  parts: 2,  down: 173.34, future: 178.58, total: 530.50, interest: 'low'  },
+  { id: '3',  parts: 3,  down: 130.00, future: 134.42, total: 533.26, interest: 'low'  },
+  { id: '4',  parts: 4,  down: 104.00, future: 108.10, total: 536.40, interest: 'low'  },
+  { id: '5',  parts: 5,  down:  86.67, future:  91.24, total: 542.87, interest: 'low'  },
+  { id: '6',  parts: 6,  down:  74.29, future:  78.88, total: 547.57, interest: 'low'  },
+  { id: '7',  parts: 7,  down:  65.00, future:  70.52, total: 558.64, interest: 'mid'  },
+  { id: '8',  parts: 8,  down:  57.78, future:  63.15, total: 562.98, interest: 'mid'  },
+  { id: '9',  parts: 9,  down:  52.00, future:  57.61, total: 570.49, interest: 'mid'  },
+  { id: '10', parts: 10, down:  47.27, future:  53.11, total: 578.37, interest: 'mid'  },
+  { id: '11', parts: 11, down:  43.33, future:  49.52, total: 587.99, interest: 'high' },
+  { id: '12', parts: 12, down:  40.00, future:  46.24, total: 594.88, interest: 'high' }
+];
+
+const state = {
+  payer: { cpf: '', name: '', email: '', phone: '' },
+  selectedPlan: null,
+  termsAccepted: false,
+  timerHandle: null,
+  timerSeconds: 20 * 60
+};
+
+const fmt = (v) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const brl = (v) => 'R$ ' + fmt(v);
+
+/* ----------------------------------------------------------
+   SCREEN ROUTING
+---------------------------------------------------------- */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ----------------------------------------------------------
+   PAYMENT METHOD SELECT (other than Koin)
+---------------------------------------------------------- */
+function selectMethod(el) {
+  const koinOpen = document.getElementById('koinContainer').classList.contains('open');
+  if (koinOpen) closeKoin();
+  document.querySelectorAll('.pay-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  showToast('Mockup: este método não é o foco da demo. Escolha "Pix Parcelado".');
+}
+
+/* ----------------------------------------------------------
+   KOIN CONTAINER
+---------------------------------------------------------- */
+function toggleKoin(el) {
+  const container = document.getElementById('koinContainer');
+  const isOpen = container.classList.contains('open');
+  document.querySelectorAll('.pay-card').forEach(c => c.classList.remove('selected', 'expanded'));
+  if (isOpen) {
+    container.classList.remove('open');
+  } else {
+    container.classList.add('open');
+    el.classList.add('selected', 'expanded');
+    // ensure on first step
+    showKoinStep('data');
+    // scroll to it
+    setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 200);
+  }
+}
+function closeKoin() {
+  document.getElementById('koinContainer').classList.remove('open');
+  document.getElementById('koinTrigger').classList.remove('selected', 'expanded');
+}
+function showKoinStep(step) {
+  document.getElementById('koinStepData').style.display = step === 'data' ? '' : 'none';
+  document.getElementById('koinStepLoading').style.display = step === 'loading' ? '' : 'none';
+  document.getElementById('koinStepInstallments').style.display = step === 'installments' ? '' : 'none';
+}
+function backToData() {
+  showKoinStep('data');
+}
+
+/* ----------------------------------------------------------
+   MASKS
+---------------------------------------------------------- */
+function maskCPF(v) {
+  v = v.replace(/\D/g, '').slice(0, 11);
+  if (v.length > 9) return v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2}).*/, '$1.$2.$3-$4');
+  if (v.length > 6) return v.replace(/(\d{3})(\d{3})(\d{1,3}).*/, '$1.$2.$3');
+  if (v.length > 3) return v.replace(/(\d{3})(\d{1,3}).*/, '$1.$2');
+  return v;
+}
+function maskPhone(v) {
+  v = v.replace(/\D/g, '').slice(0, 11);
+  if (v.length > 10) return v.replace(/(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+  if (v.length > 6)  return v.replace(/(\d{2})(\d{4,5})(\d{0,4}).*/, '($1) $2-$3').replace(/-$/, '');
+  if (v.length > 2)  return v.replace(/(\d{2})(\d{0,5}).*/, '($1) $2').trim();
+  if (v.length > 0)  return '(' + v;
+  return v;
+}
+
+/* ----------------------------------------------------------
+   VALIDATION
+---------------------------------------------------------- */
+function validCPF(v) {
+  const digits = v.replace(/\D/g, '');
+  return digits.length === 11;
+}
+function validPhone(v) {
+  const digits = v.replace(/\D/g, '');
+  return digits.length === 11;
+}
+function validEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
+}
+function validName(v) {
+  const parts = v.trim().split(/\s+/);
+  return parts.length >= 2 && parts.every(p => /^[A-Za-zÀ-ÿ'’-]+$/.test(p));
+}
+
+function setError(field, hasError) {
+  const wrap = document.querySelector(`.field[data-field="${field}"]`);
+  if (!wrap) return;
+  wrap.classList.toggle('error', hasError);
+}
+
+function refreshFormState() {
+  const cpf = document.getElementById('f-cpf').value;
+  const phone = document.getElementById('f-phone').value;
+  const name = document.getElementById('f-name').value;
+  const email = document.getElementById('f-email').value;
+
+  state.payer.cpf = cpf;
+  state.payer.phone = phone;
+  state.payer.name = name;
+  state.payer.email = email;
+
+  const okCPF = validCPF(cpf);
+  const okPhone = validPhone(phone);
+  const okName = validName(name);
+  const okEmail = validEmail(email);
+
+  document.getElementById('btnSeeOptions').disabled = !(okCPF && okPhone && okName && okEmail);
+}
+
+function bindFieldEvents() {
+  const fCpf = document.getElementById('f-cpf');
+  const fPhone = document.getElementById('f-phone');
+  const fName = document.getElementById('f-name');
+  const fEmail = document.getElementById('f-email');
+
+  fCpf.addEventListener('input', e => {
+    e.target.value = maskCPF(e.target.value);
+    refreshFormState();
+  });
+  fCpf.addEventListener('blur', e => setError('cpf', e.target.value.length > 0 && !validCPF(e.target.value)));
+
+  fPhone.addEventListener('input', e => {
+    e.target.value = maskPhone(e.target.value);
+    refreshFormState();
+  });
+  fPhone.addEventListener('blur', e => setError('phone', e.target.value.length > 0 && !validPhone(e.target.value)));
+
+  fName.addEventListener('input', refreshFormState);
+  fName.addEventListener('blur', e => setError('name', e.target.value.length > 0 && !validName(e.target.value)));
+
+  fEmail.addEventListener('input', refreshFormState);
+  fEmail.addEventListener('blur', e => setError('email', e.target.value.length > 0 && !validEmail(e.target.value)));
+}
+
+/* ----------------------------------------------------------
+   STEP TRANSITION: DATA -> LOADING -> INSTALLMENTS
+---------------------------------------------------------- */
+function goToInstallments() {
+  // Show loading
+  showKoinStep('loading');
+  setTimeout(() => {
+    renderInstallments();
+    showKoinStep('installments');
+    document.getElementById('payerCpfDisplay').textContent = state.payer.cpf || '—';
+  }, 2000);
+}
+
+function renderInstallments() {
+  const list = document.getElementById('installmentsList');
+  list.innerHTML = '';
+  INSTALLMENT_PLANS.forEach(plan => {
+    const item = document.createElement('div');
+    item.className = 'inst-item';
+    item.dataset.id = plan.id;
+    const interestLabel = plan.interest === 'low' ? 'Juros reduzidos'
+                        : plan.interest === 'mid' ? 'Juros moderados'
+                        : 'Juros maiores';
+    item.innerHTML = `
+      <div class="inst-radio"></div>
+      <div class="inst-main">
+        <div class="inst-line1">
+          1 + <strong>${plan.parts}x de ${brl(plan.future)}</strong>
+          <span class="interest-tag ${plan.interest}">${interestLabel}</span>
+        </div>
+        <div class="inst-line2">Entrada via Pix de ${brl(plan.down)}</div>
+      </div>
+      <div class="inst-total">
+        <div class="t-label">Total</div>
+        <div class="t-value">${brl(plan.total)}</div>
+      </div>
+    `;
+    item.addEventListener('click', () => selectPlan(plan.id));
+    list.appendChild(item);
+  });
+  // Default selection (1 + 12x)
+  selectPlan('12');
+}
+
+function selectPlan(id) {
+  state.selectedPlan = INSTALLMENT_PLANS.find(p => p.id === id) || null;
+  document.querySelectorAll('.inst-item').forEach(it => {
+    it.classList.toggle('selected', it.dataset.id === id);
+  });
+  const p = state.selectedPlan;
+  const box = document.getElementById('koinSelectedSummary');
+  if (p) {
+    box.style.display = '';
+    document.getElementById('sumDown').textContent = brl(p.down);
+    document.getElementById('sumFutureLabel').textContent = `${p.parts} parcelas futuras de ${brl(p.future)}`;
+    document.getElementById('sumFutureValue').textContent = brl(p.future * p.parts);
+    document.getElementById('sumTotal').textContent = brl(p.total);
+  } else {
+    box.style.display = 'none';
+  }
+  updateConfirmState();
+}
+
+function updateConfirmState() {
+  state.termsAccepted = document.getElementById('termsCheck').checked;
+  document.getElementById('btnConfirmPlan').disabled = !(state.selectedPlan && state.termsAccepted);
+}
+
+/* ----------------------------------------------------------
+   STEP: PIX SCREEN
+---------------------------------------------------------- */
+function goToPixScreen() {
+  // Persist plan info to the Pix screen
+  const p = state.selectedPlan;
+  document.getElementById('planDown').textContent = brl(p.down);
+  document.getElementById('planFutureLabel').textContent = `${p.parts} parcelas de ${brl(p.future)}`;
+  document.getElementById('planFutureValue').textContent = brl(p.future * p.parts);
+  document.getElementById('planTotal').textContent = brl(p.total);
+  document.getElementById('pixCustomerName').textContent = state.payer.name || 'Mariana Oliveira Santos';
+
+  drawFakeQR();
+  showScreen('screen-pix');
+  startTimer();
+}
+
+function startTimer() {
+  stopTimer();
+  state.timerSeconds = 20 * 60;
+  updateTimerDisplay();
+  state.timerHandle = setInterval(() => {
+    state.timerSeconds--;
+    updateTimerDisplay();
+    if (state.timerSeconds <= 0) {
+      stopTimer();
+      const box = document.getElementById('timerBox');
+      box.classList.add('expired');
+      document.getElementById('timerText').textContent = 'Este código Pix expirou. Gere uma nova opção de pagamento.';
+      document.getElementById('copyBtn').disabled = true;
+    }
+  }, 1000);
+}
+function stopTimer() {
+  if (state.timerHandle) clearInterval(state.timerHandle);
+  state.timerHandle = null;
+}
+function updateTimerDisplay() {
+  const m = Math.floor(state.timerSeconds / 60);
+  const s = state.timerSeconds % 60;
+  document.getElementById('timer').textContent =
+    String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+/* ----------------------------------------------------------
+   FAKE QR CODE (deterministic from a seed string)
+---------------------------------------------------------- */
+function drawFakeQR() {
+  const size = 25;
+  const cell = 8;
+  const total = size * cell;
+  const container = document.getElementById('qrCanvas');
+  // Pseudo-random pattern from a fixed seed for stability
+  let seed = 0xC0FFEE;
+  function rng() {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  }
+  let modules = [];
+  for (let y = 0; y < size; y++) {
+    modules[y] = [];
+    for (let x = 0; x < size; x++) {
+      modules[y][x] = rng() > 0.5 ? 1 : 0;
+    }
+  }
+  // Force finder patterns at corners
+  function placeFinder(ox, oy) {
+    for (let y = 0; y < 7; y++)
+      for (let x = 0; x < 7; x++) {
+        const inOuter = (x === 0 || x === 6 || y === 0 || y === 6);
+        const inInner = (x >= 2 && x <= 4 && y >= 2 && y <= 4);
+        modules[oy + y][ox + x] = (inOuter || inInner) ? 1 : 0;
+      }
+  }
+  placeFinder(0, 0);
+  placeFinder(size - 7, 0);
+  placeFinder(0, size - 7);
+
+  let svg = `<svg width="${total}" height="${total}" viewBox="0 0 ${total} ${total}" xmlns="http://www.w3.org/2000/svg">`;
+  svg += `<rect width="${total}" height="${total}" fill="#FFFFFF"/>`;
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      if (modules[y][x]) {
+        svg += `<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}" fill="#0F1419"/>`;
+      }
+    }
+  }
+  // Center mini-logo (Koin K)
+  const cx = total/2 - 14, cy = total/2 - 14;
+  svg += `<rect x="${cx-3}" y="${cy-3}" width="34" height="34" rx="6" fill="#FFFFFF"/>`;
+  svg += `<rect x="${cx}" y="${cy}" width="28" height="28" rx="5" fill="#121718"/>`;
+  svg += `<text x="${cx+14}" y="${cy+20}" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="18" fill="#14DD3E">K</text>`;
+  svg += `</svg>`;
+  container.innerHTML = svg;
+}
+
+/* ----------------------------------------------------------
+   COPY PIX + LOADING + APPROVED
+---------------------------------------------------------- */
+function copyPix() {
+  const code = document.getElementById('pixCode').textContent.trim();
+  const ta = document.createElement('textarea');
+  ta.value = code;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+
+  const btn = document.getElementById('copyBtn');
+  const label = document.getElementById('copyLabel');
+  btn.classList.add('copied');
+  label.textContent = 'Código copiado!';
+  showToast('Código Pix copiado. Aguardando confirmação do pagamento...');
+
+  // Update timer text to reflect awaiting payment
+  document.getElementById('timerText').textContent = 'Aguardando confirmação do pagamento da entrada...';
+
+  // Simulate confirmation
+  setTimeout(() => {
+    finalizeApproval();
+  }, 2200);
+}
+
+function finalizeApproval() {
+  stopTimer();
+  const p = state.selectedPlan;
+  document.getElementById('finalPlan').textContent =
+    `Entrada de ${brl(p.down)} + ${p.parts} parcelas de ${brl(p.future)}`;
+  document.getElementById('finalTotal').textContent = brl(p.total);
+  document.getElementById('finalEmail').textContent = state.payer.email || 'mariana.santos@email.com';
+  document.getElementById('finalCustomerName').textContent = state.payer.name || 'Mariana Oliveira Santos';
+  showScreen('screen-approved');
+}
+
+/* ----------------------------------------------------------
+   RESET
+---------------------------------------------------------- */
+function resetDemo() {
+  stopTimer();
+  // clear inputs
+  ['f-cpf', 'f-phone', 'f-name', 'f-email'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.querySelectorAll('.field').forEach(f => f.classList.remove('error'));
+  document.getElementById('termsCheck').checked = false;
+  state.selectedPlan = null;
+  state.termsAccepted = false;
+  document.getElementById('btnSeeOptions').disabled = true;
+  document.getElementById('btnConfirmPlan').disabled = true;
+  document.getElementById('koinSelectedSummary').style.display = 'none';
+  closeKoin();
+  showKoinStep('data');
+  // reset copy btn
+  const btn = document.getElementById('copyBtn');
+  btn.classList.remove('copied');
+  btn.disabled = false;
+  document.getElementById('copyLabel').textContent = 'Copiar código Pix';
+  document.getElementById('timerBox').classList.remove('expired');
+  document.getElementById('timerText').textContent = 'Tempo restante para pagar a entrada:';
+  showScreen('screen-checkout');
+}
+
+/* ----------------------------------------------------------
+   TOAST
+---------------------------------------------------------- */
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ----------------------------------------------------------
+   INIT
+---------------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', () => {
+  bindFieldEvents();
+});
+</script>
+</body>
+</html>
