@@ -1908,11 +1908,11 @@
           <!-- STEP F: Payment timeline (4x flow only) -->
           <div class="koin-body" id="koinStepTimeline" style="display:none;">
             <h3 class="koin-step-title">Como funciona o pagamento em 4x sem juros</h3>
-            <p class="koin-step-sub">Você paga a entrada agora e os próximos a cada 15 dias.</p>
+            <p class="koin-step-sub">Você paga a entrada agora e os próximos a cada 30 dias.</p>
 
             <div class="timeline-intro">
               <div class="total-line">Total: <strong>R$ 520,00</strong></div>
-              <div class="desc">A primeira parcela é paga agora e as demais a cada 15 dias.</div>
+              <div class="desc">A primeira parcela é paga agora e as demais a cada 30 dias.</div>
             </div>
 
             <div class="timeline" id="timelineList"><!-- preenchido por JS --></div>
@@ -2298,7 +2298,7 @@ const FOUR_X_PLAN = {
   down: 130.00,       // entrada
   future: 130.00,     // valor de cada pagamento futuro
   total: 520.00,      // total
-  frequency: 15       // dias entre pagamentos
+  frequency: 30       // dias entre pagamentos
 };
 const VERIFICATION_CODE = '842913'; // código fixo do mockup
 
@@ -2722,7 +2722,7 @@ function finalizeApproval() {
 
   if (is4x) {
     document.getElementById('finalPlan').textContent =
-      `Entrada de ${brl(p.down)} + ${p.parts} pagamentos de ${brl(p.future)} a cada 15 dias`;
+      `Entrada de ${brl(p.down)} + ${p.parts} pagamentos de ${brl(p.future)} a cada 30 dias`;
     document.getElementById('finalPaymentMethod').textContent = 'Pix Parcelado sem juros · Koin';
     document.getElementById('nextInstallmentsNote').innerHTML =
       'Os próximos pagamentos serão enviados para o e-mail <strong id="finalEmail">' +
@@ -3004,10 +3004,10 @@ function goToTimeline() {
 function renderTimeline() {
   const list = document.getElementById('timelineList');
   const items = [
-    { label: 'Hoje',      desc: 'Entrada',       amount: 130.00, status: 'current' },
-    { label: 'Em 15 dias', desc: '2º pagamento', amount: 130.00, status: 'future' },
-    { label: 'Em 30 dias', desc: '3º pagamento', amount: 130.00, status: 'future' },
-    { label: 'Em 45 dias', desc: '4º pagamento', amount: 130.00, status: 'future' }
+    { label: 'Hoje',       desc: 'Entrada',       amount: 130.00, status: 'current' },
+    { label: 'Em 30 dias', desc: '2º pagamento', amount: 130.00, status: 'future' },
+    { label: 'Em 60 dias', desc: '3º pagamento', amount: 130.00, status: 'future' },
+    { label: 'Em 90 dias', desc: '4º pagamento', amount: 130.00, status: 'future' }
   ];
   list.innerHTML = items.map((it, i) => `
     <div class="timeline-item ${it.status}">
