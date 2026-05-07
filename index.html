@@ -338,6 +338,10 @@
   }
   @media (max-width: 640px) {
     .form-grid { grid-template-columns: 1fr; }
+    .approved-screen { padding: 24px 12px 48px 12px; }
+    .order-progress { padding: 24px 12px; }
+    .progress-track { margin: 8px 0 0 0; }
+    .progress-label { max-width: 78px; }
   }
   .field { display: flex; flex-direction: column; gap: 6px; }
   .field.full { grid-column: 1 / -1; }
@@ -459,41 +463,37 @@
   .summary-strip .value { font-size: 18px; font-weight: 700; color: #0F1419; }
 
   .installments-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 380px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #FFFFFF;
+    padding: 0 16px;
+    max-height: 420px;
     overflow-y: auto;
-    padding: 2px;
   }
   .installments-list::-webkit-scrollbar { width: 8px; }
   .installments-list::-webkit-scrollbar-thumb {
     background: #D1D5DB; border-radius: 8px;
   }
   .inst-item {
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 16px;
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr;
     gap: 14px;
     align-items: center;
     cursor: pointer;
-    transition: all .15s ease;
-    background: #FFFFFF;
+    transition: background .15s ease;
+    padding: 18px 4px;
+    border-bottom: 1px solid var(--border-soft);
+    background: transparent;
   }
-  .inst-item:hover { border-color: #B5D6FF; background: #FBFDFF; }
-  .inst-item.selected {
-    border-color: var(--magalu-blue);
-    background: #F4F9FF;
-    box-shadow: 0 0 0 3px rgba(0,134,255,.08);
-  }
+  .inst-item:last-child { border-bottom: none; }
+  .inst-item:hover { background: #FBFDFF; }
+  .inst-item.selected { background: #F4F9FF; }
   .inst-radio {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
-    border: 2px solid #D1D5DB;
-    flex: 0 0 20px;
+    border: 2px solid #C9CFD6;
+    flex: 0 0 22px;
     position: relative;
     transition: border-color .15s ease;
   }
@@ -507,30 +507,27 @@
     border-radius: 50%;
     background: var(--magalu-blue);
   }
-  .inst-main { display: flex; flex-direction: column; gap: 2px; }
+  .inst-main { display: flex; flex-direction: column; gap: 4px; }
   .inst-line1 {
-    font-size: 14px;
+    font-size: 17px;
     color: #0F1419;
-    font-weight: 600;
+    font-weight: 400;
+    line-height: 1.3;
   }
-  .inst-line1 strong { color: var(--magalu-blue); }
+  .inst-line1 strong { font-weight: 700; color: #0F1419; }
   .inst-line2 {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-soft);
+    line-height: 1.4;
   }
-  .inst-total {
-    text-align: right;
-  }
-  .inst-total .t-label { font-size: 11px; color: var(--text-soft); }
-  .inst-total .t-value { font-size: 14px; font-weight: 700; color: #0F1419; }
   .interest-tag {
     display: inline-block;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
-    padding: 2px 8px;
+    padding: 1px 8px;
     border-radius: 6px;
     margin-left: 6px;
-    vertical-align: middle;
+    vertical-align: 1px;
   }
   .interest-tag.low { background: var(--green-50); color: #0E7C25; }
   .interest-tag.mid { background: #FFF7E6; color: #B45309; }
@@ -1051,6 +1048,446 @@
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
+
+  /* =========================================================
+     4X NO-INTEREST FLOW: WhatsApp + timeline + test button
+     ========================================================= */
+
+  /* Test button on approved screen */
+  .test-4x-cta {
+    margin-top: 20px;
+    padding: 18px;
+    background: linear-gradient(135deg, #F4F9FF 0%, #E6F3FF 100%);
+    border: 1px dashed #B5D6FF;
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+  .test-4x-cta .label {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin: 0 0 10px 0;
+    font-weight: 500;
+  }
+  .test-4x-cta button {
+    background: var(--magalu-blue);
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    transition: all .15s ease;
+  }
+  .test-4x-cta button:hover {
+    background: var(--magalu-blue-dark);
+    transform: translateY(-1px);
+  }
+
+  /* Success state inside Koin step */
+  .success-state {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--green-50);
+    border: 1px solid #A7E5B5;
+    border-radius: 10px;
+    color: #0E7C25;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 12px;
+  }
+  .success-state .icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 22px;
+  }
+
+  /* Phone display row (with "Alterar" link) */
+  .phone-display {
+    font-size: 13px;
+    color: var(--text);
+    margin: 0 0 14px 0;
+  }
+  .phone-display strong { color: #0F1419; }
+  .phone-display a {
+    color: var(--magalu-blue);
+    font-weight: 600;
+    margin-left: 8px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* Resend timer line */
+  .resend-line {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--text-soft);
+    text-align: center;
+  }
+  .resend-line .seconds { color: var(--magalu-blue); font-weight: 700; }
+  .resend-line .link {
+    color: var(--magalu-blue);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  /* =========================================================
+     PAYMENT TIMELINE (4x view)
+     ========================================================= */
+  .timeline-intro {
+    background: #F8F9FB;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+  }
+  .timeline-intro .total-line {
+    font-size: 14px;
+    color: var(--text);
+  }
+  .timeline-intro .total-line strong {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0F1419;
+  }
+  .timeline-intro .desc {
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-top: 4px;
+    line-height: 1.45;
+  }
+
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    position: relative;
+    margin: 8px 4px 0 4px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 22px;
+    left: calc(12.5% + 8px);
+    right: calc(12.5% + 8px);
+    height: 3px;
+    background: var(--green);
+    border-radius: 999px;
+    z-index: 0;
+  }
+  .timeline-item {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+  .timeline-dot {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 3px solid var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--green);
+    font-weight: 800;
+    font-size: 16px;
+  }
+  .timeline-item.current .timeline-dot {
+    background: var(--green);
+    color: #FFFFFF;
+  }
+  .timeline-item.future .timeline-dot {
+    background: #FFFFFF;
+    border-color: #C7E8CE;
+    color: #5BA46A;
+  }
+  .timeline-amount {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0F1419;
+    margin-top: 2px;
+  }
+  .timeline-when {
+    font-size: 11px;
+    color: var(--text-soft);
+    line-height: 1.3;
+    max-width: 90px;
+  }
+  .timeline-current-pill {
+    display: inline-block;
+    background: var(--green);
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-top: 2px;
+  }
+
+  @media (max-width: 480px) {
+    .timeline-dot { width: 38px; height: 38px; font-size: 14px; }
+    .timeline-amount { font-size: 12px; }
+    .timeline::before { top: 19px; }
+  }
+
+  /* =========================================================
+     FAKE WHATSAPP SCREEN
+     ========================================================= */
+  #screen-whatsapp {
+    background: #ECE5DD;
+    min-height: 100vh;
+  }
+  .wa-shell {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #ECE5DD;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 24px rgba(0,0,0,.05);
+  }
+  .wa-header {
+    background: #075E54;
+    color: #FFFFFF;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  .wa-back {
+    color: #FFFFFF;
+    background: transparent;
+    padding: 4px;
+    margin-left: -4px;
+  }
+  .wa-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex: 0 0 40px;
+    background: var(--koin-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .wa-avatar svg { width: 100%; height: 100%; }
+  .wa-meta { flex: 1; min-width: 0; }
+  .wa-name {
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .wa-verified {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+  }
+  .wa-status {
+    font-size: 11px;
+    opacity: .85;
+    margin-top: 1px;
+  }
+  .wa-actions {
+    display: flex;
+    gap: 14px;
+    color: #FFFFFF;
+    opacity: .9;
+  }
+
+  .wa-body {
+    flex: 1;
+    padding: 20px 16px 24px 16px;
+    background-image:
+      radial-gradient(circle at 25% 30%, rgba(7,94,84,.04) 0 2px, transparent 2px),
+      radial-gradient(circle at 75% 70%, rgba(7,94,84,.04) 0 2px, transparent 2px);
+    background-color: #ECE5DD;
+    background-size: 40px 40px;
+    overflow-y: auto;
+  }
+  .wa-system-msg {
+    background: #FFF6CD;
+    color: #5C3D00;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    text-align: center;
+    margin: 0 auto 16px auto;
+    max-width: 320px;
+    line-height: 1.4;
+  }
+  .wa-day-pill {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--text-soft);
+    width: max-content;
+    margin: 0 auto 14px auto;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+  }
+
+  .wa-business-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 18px 16px;
+    text-align: center;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+  }
+  .wa-business-card .avatar-big {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    margin: 0 auto 10px auto;
+    overflow: hidden;
+  }
+  .wa-business-card .avatar-big svg { width: 100%; height: 100%; }
+  .wa-business-card .name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0F1419;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .wa-business-card .meta {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  .wa-msg-card {
+    background: #FFFFFF;
+    border-radius: 8px 8px 8px 2px;
+    padding: 10px 12px 8px 12px;
+    max-width: 86%;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .wa-msg-card .body {
+    font-size: 14px;
+    color: #0F1419;
+    line-height: 1.45;
+  }
+  .wa-msg-card .body strong {
+    font-weight: 700;
+    letter-spacing: .5px;
+  }
+  .wa-msg-card .timestamp {
+    text-align: right;
+    font-size: 10.5px;
+    color: var(--text-soft);
+    margin-top: 4px;
+  }
+  .wa-msg-card .footer {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--text-soft);
+  }
+  .wa-copy-btn {
+    margin-top: 8px;
+    padding: 8px 12px;
+    width: 100%;
+    border-top: 1px solid #E5E7EB;
+    color: var(--koin-green);
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    border-radius: 0;
+  }
+  .wa-copy-btn.copied { color: var(--green); }
+
+  .wa-input-bar {
+    background: #F0F0F0;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-top: 1px solid #DCDCDC;
+  }
+  .wa-input-bar .input {
+    flex: 1;
+    background: #FFFFFF;
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .wa-input-bar .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #075E54;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* =========================================================
+     CODE INPUT (6 cells)
+     ========================================================= */
+  .code-cells {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .code-cells input {
+    height: 52px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0F1419;
+    background: #FFFFFF;
+    transition: border-color .15s ease, box-shadow .15s ease;
+    outline: none;
+    padding: 0;
+    width: 100%;
+  }
+  .code-cells input:focus {
+    border-color: var(--magalu-blue);
+    box-shadow: 0 0 0 4px rgba(0,134,255,.10);
+  }
+  .code-cells.error input {
+    border-color: var(--danger);
+  }
+  .code-cells.success input {
+    border-color: var(--green);
+    background: #F4FCF6;
+  }
+  .code-error {
+    display: none;
+    font-size: 12px;
+    color: var(--danger);
+    margin-top: 6px;
+  }
+  .code-cells.error ~ .code-error { display: block; }
 </style>
 </head>
 <body>
@@ -1224,6 +1661,87 @@
               Confirmar parcelamento
             </button>
             <button class="koin-back" onclick="backToData()">← Voltar para dados do pagador</button>
+          </div>
+
+          <!-- STEP D: WhatsApp entry (4x flow only) -->
+          <div class="koin-body" id="koinStepWhatsappEntry" style="display:none;">
+            <h3 class="koin-step-title">Verifique seu WhatsApp</h3>
+            <p class="koin-step-sub">Precisamos confirmar seu número para continuar.</p>
+
+            <div class="form-grid">
+              <div class="field full" data-field="whatsapp">
+                <label for="f-whatsapp">Número do WhatsApp</label>
+                <input id="f-whatsapp" type="text" inputmode="numeric" placeholder="(00) 00000-0000" maxlength="15" autocomplete="off" />
+                <span class="field-error">Informe um número válido.</span>
+              </div>
+            </div>
+
+            <button class="btn-primary" id="btnSendCode" disabled onclick="openFakeWhatsapp()">
+              Enviar código pelo WhatsApp
+            </button>
+            <button class="koin-back" onclick="backToData()">← Voltar para dados do pagador</button>
+          </div>
+
+          <!-- STEP E: Code validation + terms (4x flow only) -->
+          <div class="koin-body" id="koinStepCodeValidation" style="display:none;">
+            <h3 class="koin-step-title">Cole o código de verificação</h3>
+            <p class="koin-step-sub">Insira o código que você recebeu no WhatsApp.</p>
+
+            <p class="phone-display">
+              Enviamos para <strong id="codePhoneDisplay">—</strong>
+              <a onclick="editWhatsappPhone()">Alterar</a>
+            </p>
+
+            <div class="code-cells" id="codeCells">
+              <input type="text" inputmode="numeric" maxlength="1" data-idx="0" />
+              <input type="text" inputmode="numeric" maxlength="1" data-idx="1" />
+              <input type="text" inputmode="numeric" maxlength="1" data-idx="2" />
+              <input type="text" inputmode="numeric" maxlength="1" data-idx="3" />
+              <input type="text" inputmode="numeric" maxlength="1" data-idx="4" />
+              <input type="text" inputmode="numeric" maxlength="1" data-idx="5" />
+            </div>
+            <span class="code-error">Código inválido. Tente novamente.</span>
+
+            <div class="success-state" id="codeSuccessState" style="display:none;">
+              <span class="icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              WhatsApp verificado com sucesso.
+            </div>
+
+            <div class="resend-line" id="resendLine">
+              Não recebeu o código? Reenvie em <span class="seconds" id="resendSeconds">0:30</span>
+            </div>
+
+            <label class="terms" style="margin-top: 14px;">
+              <input type="checkbox" id="terms4xCheck" onchange="updateContinue4xState()" />
+              <span>
+                Li e aceito as <a href="#" onclick="event.preventDefault(); showToast('Mockup: link demonstrativo')">Políticas de Privacidade</a>
+                e os <a href="#" onclick="event.preventDefault(); showToast('Mockup: link demonstrativo')">Termos e Condições</a> da Koin.
+              </span>
+            </label>
+
+            <button class="btn-primary" id="btnContinue4x" disabled onclick="goToTimeline()">
+              Continuar
+            </button>
+          </div>
+
+          <!-- STEP F: Payment timeline (4x flow only) -->
+          <div class="koin-body" id="koinStepTimeline" style="display:none;">
+            <h3 class="koin-step-title">Como funciona o pagamento em 4x sem juros</h3>
+            <p class="koin-step-sub">Você paga a entrada agora e os próximos a cada 15 dias.</p>
+
+            <div class="timeline-intro">
+              <div class="total-line">Total: <strong>R$ 520,00</strong></div>
+              <div class="desc">A primeira parcela é paga agora e as demais a cada 15 dias.</div>
+            </div>
+
+            <div class="timeline" id="timelineList"><!-- preenchido por JS --></div>
+
+            <button class="btn-primary" onclick="goToPixScreen()" style="margin-top: 24px;">
+              Ir para pagamento da entrada
+            </button>
+            <button class="koin-back" onclick="showKoinStep('codeValidation')">← Voltar</button>
           </div>
 
         </div>
@@ -1403,6 +1921,79 @@
 </div>
 
 <!-- =========================================================
+     SCREEN 2.5: FAKE WHATSAPP (4x flow only)
+========================================================= -->
+<div id="screen-whatsapp" class="screen">
+  <div class="wa-shell">
+    <div class="wa-header">
+      <button class="wa-back" onclick="returnFromFakeWhatsapp()" aria-label="Voltar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="wa-avatar">
+        <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <rect width="128" height="128" rx="64" fill="#121718"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M32 35.5V95.5H46.2499V35.5H32ZM69.5 58L96.5 95.5H78.5L61.25 72.25L69.5 58Z" fill="white"/>
+          <path d="M74.75 28L35 95.5H51.5L91.25 28H74.75Z" fill="#14DD3E"/>
+        </svg>
+      </div>
+      <div class="wa-meta">
+        <div class="wa-name">
+          Koin
+          <svg class="wa-verified" viewBox="0 0 24 24" fill="#1FA2FF" xmlns="http://www.w3.org/2000/svg"><path d="M12 1l2.5 2.5L18 3l1 3.5L22 8l-1 3.5L22 15l-3 1.5L18 20l-3.5-.5L12 22l-2.5-2.5L6 20l-1-3.5L2 15l1-3.5L2 8l3-1.5L6 3l3.5.5L12 1z"/><polyline points="9 12 11 14 15 10" stroke="#FFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </div>
+        <div class="wa-status">online</div>
+      </div>
+      <div class="wa-actions">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <svg width="4" height="20" viewBox="0 0 4 20" fill="currentColor"><circle cx="2" cy="3" r="2"/><circle cx="2" cy="10" r="2"/><circle cx="2" cy="17" r="2"/></svg>
+      </div>
+    </div>
+
+    <div class="wa-body">
+      <div class="wa-day-pill">Hoje</div>
+      <div class="wa-system-msg">
+        🔒 Esta empresa usa um serviço seguro da Meta para gerenciar esta conversa.
+      </div>
+
+      <div class="wa-business-card">
+        <div class="avatar-big">
+          <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+            <rect width="128" height="128" rx="64" fill="#121718"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M32 35.5V95.5H46.2499V35.5H32ZM69.5 58L96.5 95.5H78.5L61.25 72.25L69.5 58Z" fill="white"/>
+            <path d="M74.75 28L35 95.5H51.5L91.25 28H74.75Z" fill="#14DD3E"/>
+          </svg>
+        </div>
+        <div class="name">
+          Koin
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#1FA2FF" xmlns="http://www.w3.org/2000/svg"><path d="M12 1l2.5 2.5L18 3l1 3.5L22 8l-1 3.5L22 15l-3 1.5L18 20l-3.5-.5L12 22l-2.5-2.5L6 20l-1-3.5L2 15l1-3.5L2 8l3-1.5L6 3l3.5.5L12 1z"/><polyline points="9 12 11 14 15 10" stroke="#FFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </div>
+        <div class="meta">Conta comercial · Empresa cadastrada<br/>desde novembro de 2024</div>
+      </div>
+
+      <div class="wa-msg-card">
+        <div class="body">
+          Seu código de verificação é <strong id="waCodeText">842913</strong>. Para sua segurança, não o compartilhe.
+        </div>
+        <div class="footer">Expira em 5 minutos.</div>
+        <div class="timestamp" id="waTimestamp">11:55</div>
+        <button class="wa-copy-btn" id="waCopyBtn" onclick="copyWhatsappCode()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span id="waCopyLabel">Copiar código</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="wa-input-bar">
+      <div class="input">Mensagem</div>
+      <div class="icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
      SCREEN 3: APPROVED
 ========================================================= -->
 <div id="screen-approved" class="screen">
@@ -1459,12 +2050,12 @@
       <div class="row"><span class="lbl">Cliente</span><span class="val" id="finalCustomerName">—</span></div>
       <div class="row"><span class="lbl">Produto</span><span class="val">Smartphone Samsung Galaxy A55 5G 256GB</span></div>
       <div class="row"><span class="lbl">Endereço de entrega</span><span class="val">Rua Harmonia, 245, Apto 82 · Vila Madalena · São Paulo · SP</span></div>
-      <div class="row"><span class="lbl">Forma de pagamento</span><span class="val">Pix Parcelado · Koin</span></div>
+      <div class="row"><span class="lbl">Forma de pagamento</span><span class="val" id="finalPaymentMethod">Pix Parcelado · Koin</span></div>
       <div class="row"><span class="lbl">Plano de pagamento</span><span class="val" id="finalPlan">—</span></div>
       <div class="row"><span class="lbl">Total financiado</span><span class="val" id="finalTotal">—</span></div>
     </div>
 
-    <div class="next-installments-note">
+    <div class="next-installments-note" id="nextInstallmentsNote">
       As próximas parcelas serão enviadas para o e-mail <strong id="finalEmail">—</strong>.
       Acompanhe e pague pelo app Koin sempre que preferir.
     </div>
@@ -1473,6 +2064,11 @@
       <button class="btn-secondary" onclick="showToast('Mockup: detalhes do pedido (demo)')">Ver detalhes do pedido</button>
       <button class="btn-secondary" onclick="showToast('Mockup: link para a loja do app Koin (demo)')">Baixar app Koin</button>
       <button class="btn-primary" onclick="resetDemo()">Voltar para a loja</button>
+    </div>
+
+    <div class="test-4x-cta" id="test4xCta">
+      <p class="label">Quer testar a versão alternativa?</p>
+      <button onclick="startFourXFlow()">Testar fluxo 4x sem juros</button>
     </div>
   </div>
 </div>
@@ -1505,12 +2101,27 @@ const INSTALLMENT_PLANS = [
 ];
 
 const state = {
+  mode: 'main', // 'main' (com juros, escolhe parcelas) | '4x' (sem juros, valida WhatsApp)
   payer: { cpf: '', name: '', email: '', phone: '' },
+  whatsappPhone: '',
+  whatsappCode: '',
   selectedPlan: null,
   termsAccepted: false,
   timerHandle: null,
-  timerSeconds: 20 * 60
+  timerSeconds: 20 * 60,
+  resendHandle: null,
+  resendSeconds: 30
 };
+
+// Plano fixo do fluxo 4x sem juros
+const FOUR_X_PLAN = {
+  parts: 3,           // 3 pagamentos futuros após a entrada
+  down: 130.00,       // entrada
+  future: 130.00,     // valor de cada pagamento futuro
+  total: 520.00,      // total
+  frequency: 15       // dias entre pagamentos
+};
+const VERIFICATION_CODE = '842913'; // código fixo do mockup
 
 const fmt = (v) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const brl = (v) => 'R$ ' + fmt(v);
@@ -1558,9 +2169,18 @@ function closeKoin() {
   document.getElementById('koinTrigger').classList.remove('selected', 'expanded');
 }
 function showKoinStep(step) {
-  document.getElementById('koinStepData').style.display = step === 'data' ? '' : 'none';
-  document.getElementById('koinStepLoading').style.display = step === 'loading' ? '' : 'none';
-  document.getElementById('koinStepInstallments').style.display = step === 'installments' ? '' : 'none';
+  const ids = {
+    data: 'koinStepData',
+    loading: 'koinStepLoading',
+    installments: 'koinStepInstallments',
+    whatsappEntry: 'koinStepWhatsappEntry',
+    codeValidation: 'koinStepCodeValidation',
+    timeline: 'koinStepTimeline'
+  };
+  Object.entries(ids).forEach(([key, id]) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = (step === key ? '' : 'none');
+  });
 }
 function backToData() {
   showKoinStep('data');
@@ -1652,18 +2272,63 @@ function bindFieldEvents() {
 
   fEmail.addEventListener('input', refreshFormState);
   fEmail.addEventListener('blur', e => setError('email', e.target.value.length > 0 && !validEmail(e.target.value)));
+
+  // WhatsApp phone (4x flow)
+  const fWa = document.getElementById('f-whatsapp');
+  if (fWa) {
+    fWa.addEventListener('input', e => {
+      e.target.value = maskPhone(e.target.value);
+      refreshWhatsappState();
+    });
+    fWa.addEventListener('blur', e => setError('whatsapp', e.target.value.length > 0 && !validPhone(e.target.value)));
+  }
+
+  // Code cells (6 dígitos)
+  const cells = document.querySelectorAll('#codeCells input');
+  cells.forEach((cell, idx) => {
+    cell.addEventListener('input', e => {
+      // Aceita apenas dígito
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 1);
+      // Avança automaticamente
+      if (e.target.value && idx < cells.length - 1) {
+        cells[idx + 1].focus();
+      }
+      validateCodeCells();
+    });
+    cell.addEventListener('keydown', e => {
+      // Backspace volta pra célula anterior se vazia
+      if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+        cells[idx - 1].focus();
+      }
+    });
+    cell.addEventListener('paste', e => {
+      e.preventDefault();
+      const txt = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+      if (txt) {
+        fillCodeCells(txt);
+        // Foca a última célula preenchida
+        const target = Math.min(txt.length, cells.length) - 1;
+        if (target >= 0) cells[target].focus();
+      }
+    });
+  });
 }
 
 /* ----------------------------------------------------------
    STEP TRANSITION: DATA -> LOADING -> INSTALLMENTS
 ---------------------------------------------------------- */
 function goToInstallments() {
-  // Show loading
+  // Show loading (used for both flows)
   showKoinStep('loading');
   setTimeout(() => {
-    renderInstallments();
-    showKoinStep('installments');
-    document.getElementById('payerCpfDisplay').textContent = state.payer.cpf || '—';
+    if (state.mode === '4x') {
+      // No fluxo sem juros, vai direto para o passo de WhatsApp
+      showKoinStep('whatsappEntry');
+    } else {
+      renderInstallments();
+      showKoinStep('installments');
+      document.getElementById('payerCpfDisplay').textContent = state.payer.cpf || '—';
+    }
   }, 2000);
 }
 
@@ -1680,15 +2345,8 @@ function renderInstallments() {
     item.innerHTML = `
       <div class="inst-radio"></div>
       <div class="inst-main">
-        <div class="inst-line1">
-          1 + <strong>${plan.parts}x de ${brl(plan.future)}</strong>
-          <span class="interest-tag ${plan.interest}">${interestLabel}</span>
-        </div>
-        <div class="inst-line2">Entrada via Pix de ${brl(plan.down)}</div>
-      </div>
-      <div class="inst-total">
-        <div class="t-label">Total</div>
-        <div class="t-value">${brl(plan.total)}</div>
+        <div class="inst-line1"><strong>Entrada + ${plan.parts}x</strong> de ${brl(plan.future)}</div>
+        <div class="inst-line2">${brl(plan.down)} hoje · Total ${brl(plan.total)} · ${interestLabel}</div>
       </div>
     `;
     item.addEventListener('click', () => selectPlan(plan.id));
@@ -1726,10 +2384,15 @@ function updateConfirmState() {
    STEP: PIX SCREEN
 ---------------------------------------------------------- */
 function goToPixScreen() {
-  // Persist plan info to the Pix screen
-  const p = state.selectedPlan;
+  // Persist plan info to the Pix screen — usa FOUR_X_PLAN no modo 4x
+  const p = (state.mode === '4x') ? FOUR_X_PLAN : state.selectedPlan;
+  state.selectedPlan = p; // garante que finalizeApproval encontra
   document.getElementById('planDown').textContent = brl(p.down);
-  document.getElementById('planFutureLabel').textContent = `${p.parts} parcelas de ${brl(p.future)}`;
+  if (state.mode === '4x') {
+    document.getElementById('planFutureLabel').textContent = `${p.parts} pagamentos de ${brl(p.future)}`;
+  } else {
+    document.getElementById('planFutureLabel').textContent = `${p.parts} parcelas de ${brl(p.future)}`;
+  }
   document.getElementById('planFutureValue').textContent = brl(p.future * p.parts);
   document.getElementById('planTotal').textContent = brl(p.total);
   document.getElementById('pixCustomerName').textContent = state.payer.name || 'Mariana Oliveira Santos';
@@ -1848,41 +2511,280 @@ function copyPix() {
 function finalizeApproval() {
   stopTimer();
   const p = state.selectedPlan;
-  document.getElementById('finalPlan').textContent =
-    `Entrada de ${brl(p.down)} + ${p.parts} parcelas de ${brl(p.future)}`;
+  const is4x = state.mode === '4x';
+
+  if (is4x) {
+    document.getElementById('finalPlan').textContent =
+      `Entrada de ${brl(p.down)} + ${p.parts} pagamentos de ${brl(p.future)} a cada 15 dias`;
+    document.getElementById('finalPaymentMethod').textContent = 'Pix Parcelado sem juros · Koin';
+    document.getElementById('nextInstallmentsNote').innerHTML =
+      'Os próximos pagamentos serão enviados para o e-mail <strong id="finalEmail">' +
+      (state.payer.email || 'mariana.santos@email.com') + '</strong>. Acompanhe e pague pelo app Koin sempre que preferir.';
+  } else {
+    document.getElementById('finalPlan').textContent =
+      `Entrada de ${brl(p.down)} + ${p.parts} parcelas de ${brl(p.future)}`;
+    document.getElementById('finalPaymentMethod').textContent = 'Pix Parcelado · Koin';
+    document.getElementById('nextInstallmentsNote').innerHTML =
+      'As próximas parcelas serão enviadas para o e-mail <strong id="finalEmail">' +
+      (state.payer.email || 'mariana.santos@email.com') + '</strong>. Acompanhe e pague pelo app Koin sempre que preferir.';
+  }
   document.getElementById('finalTotal').textContent = brl(p.total);
-  document.getElementById('finalEmail').textContent = state.payer.email || 'mariana.santos@email.com';
   document.getElementById('finalCustomerName').textContent = state.payer.name || 'Mariana Oliveira Santos';
+
+  // O CTA "Testar fluxo 4x sem juros" só aparece após o fluxo principal com juros
+  document.getElementById('test4xCta').style.display = is4x ? 'none' : '';
+
   showScreen('screen-approved');
 }
 
 /* ----------------------------------------------------------
    RESET
 ---------------------------------------------------------- */
-function resetDemo() {
+function resetDemo(opts) {
+  opts = opts || {};
+  const newMode = opts.mode || 'main';
+
   stopTimer();
+  stopResendTimer();
   // clear inputs
-  ['f-cpf', 'f-phone', 'f-name', 'f-email'].forEach(id => {
+  ['f-cpf', 'f-phone', 'f-name', 'f-email', 'f-whatsapp'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
+  // clear code cells
+  document.querySelectorAll('#codeCells input').forEach(i => i.value = '');
+  document.getElementById('codeCells').classList.remove('error', 'success');
+  document.getElementById('codeSuccessState').style.display = 'none';
   document.querySelectorAll('.field').forEach(f => f.classList.remove('error'));
   document.getElementById('termsCheck').checked = false;
+  const t4 = document.getElementById('terms4xCheck');
+  if (t4) t4.checked = false;
   state.selectedPlan = null;
   state.termsAccepted = false;
+  state.whatsappPhone = '';
+  state.whatsappCode = '';
+  state.mode = newMode;
+
   document.getElementById('btnSeeOptions').disabled = true;
   document.getElementById('btnConfirmPlan').disabled = true;
+  const btnSendCode = document.getElementById('btnSendCode');
+  const btnContinue4x = document.getElementById('btnContinue4x');
+  if (btnSendCode) btnSendCode.disabled = true;
+  if (btnContinue4x) btnContinue4x.disabled = true;
   document.getElementById('koinSelectedSummary').style.display = 'none';
   closeKoin();
   showKoinStep('data');
-  // reset copy btn
+  // reset copy btn (Pix)
   const btn = document.getElementById('copyBtn');
   btn.classList.remove('copied');
   btn.disabled = false;
   document.getElementById('copyLabel').textContent = 'Copiar código Pix';
   document.getElementById('timerBox').classList.remove('expired');
   document.getElementById('timerText').textContent = 'Tempo restante para pagar a entrada:';
+  // reset WA copy btn
+  const waBtn = document.getElementById('waCopyBtn');
+  if (waBtn) waBtn.classList.remove('copied');
+  const waLabel = document.getElementById('waCopyLabel');
+  if (waLabel) waLabel.textContent = 'Copiar código';
+
+  applyMode();
   showScreen('screen-checkout');
+}
+
+/* ----------------------------------------------------------
+   MODE APPLICATION (main vs 4x)
+---------------------------------------------------------- */
+function applyMode() {
+  const is4x = state.mode === '4x';
+  const trigger = document.getElementById('koinTrigger');
+  const title = trigger.querySelector('.pay-title');
+  const sub = trigger.querySelector('.pay-sub');
+  const btnSeeOptions = document.getElementById('btnSeeOptions');
+
+  if (is4x) {
+    title.textContent = 'Pix Parcelado sem juros';
+    sub.textContent = 'Pague a entrada hoje e o restante em mais 3 pagamentos, sem juros.';
+    btnSeeOptions.textContent = 'Continuar';
+  } else {
+    title.textContent = 'Pix Parcelado';
+    sub.textContent = 'Parcele sua compra em até 1 + 12x. Sem cartão de crédito.';
+    btnSeeOptions.textContent = 'Ver opções de parcelamento';
+  }
+}
+
+/* ----------------------------------------------------------
+   START 4X FLOW (from approved screen CTA)
+---------------------------------------------------------- */
+function startFourXFlow() {
+  resetDemo({ mode: '4x' });
+  // Abre automaticamente o card Koin para acelerar a demo
+  setTimeout(() => {
+    const trigger = document.getElementById('koinTrigger');
+    toggleKoin(trigger);
+  }, 200);
+}
+
+/* ----------------------------------------------------------
+   WHATSAPP FLOW (4x only)
+---------------------------------------------------------- */
+function refreshWhatsappState() {
+  const v = document.getElementById('f-whatsapp').value;
+  state.whatsappPhone = v;
+  document.getElementById('btnSendCode').disabled = !validPhone(v);
+}
+
+function openFakeWhatsapp() {
+  const phone = state.whatsappPhone || document.getElementById('f-whatsapp').value;
+  state.whatsappPhone = phone;
+  // Atualiza o display do telefone na tela seguinte
+  document.getElementById('codePhoneDisplay').textContent = phone;
+  // Atualiza o timestamp da mensagem do WhatsApp pra parecer "agora"
+  const now = new Date();
+  document.getElementById('waTimestamp').textContent =
+    String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  showScreen('screen-whatsapp');
+}
+
+function copyWhatsappCode() {
+  const code = VERIFICATION_CODE;
+  const ta = document.createElement('textarea');
+  ta.value = code;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+
+  const btn = document.getElementById('waCopyBtn');
+  const label = document.getElementById('waCopyLabel');
+  btn.classList.add('copied');
+  label.textContent = 'Código copiado!';
+  showToast('Código copiado. Voltando ao checkout...');
+
+  // Auto-retorna em 1s pra simular o usuário voltando ao checkout
+  setTimeout(() => {
+    returnFromFakeWhatsapp({ autoFill: true });
+  }, 1000);
+}
+
+function returnFromFakeWhatsapp(opts) {
+  opts = opts || {};
+  showScreen('screen-checkout');
+  showKoinStep('codeValidation');
+  // Reinicia o reenvio
+  startResendTimer();
+  // Se voltou pelo botão "Copiar código", já preenche os campos
+  if (opts.autoFill) {
+    fillCodeCells(VERIFICATION_CODE);
+  }
+  // Foca a primeira célula vazia
+  setTimeout(() => {
+    const first = document.querySelector('#codeCells input[data-idx="0"]');
+    if (first && !first.value) first.focus();
+  }, 200);
+}
+
+function editWhatsappPhone() {
+  showKoinStep('whatsappEntry');
+}
+
+function fillCodeCells(code) {
+  const cells = document.querySelectorAll('#codeCells input');
+  for (let i = 0; i < cells.length; i++) {
+    cells[i].value = (code[i] || '');
+  }
+  validateCodeCells();
+}
+
+function validateCodeCells() {
+  const cells = document.querySelectorAll('#codeCells input');
+  const value = Array.from(cells).map(c => c.value).join('');
+  state.whatsappCode = value;
+  const wrap = document.getElementById('codeCells');
+
+  if (value.length < 6) {
+    wrap.classList.remove('error', 'success');
+    document.getElementById('codeSuccessState').style.display = 'none';
+    updateContinue4xState();
+    return;
+  }
+  if (value === VERIFICATION_CODE) {
+    wrap.classList.remove('error');
+    wrap.classList.add('success');
+    document.getElementById('codeSuccessState').style.display = '';
+  } else {
+    wrap.classList.remove('success');
+    wrap.classList.add('error');
+    document.getElementById('codeSuccessState').style.display = 'none';
+  }
+  updateContinue4xState();
+}
+
+function updateContinue4xState() {
+  const wrap = document.getElementById('codeCells');
+  const codeOk = wrap.classList.contains('success');
+  const termsOk = document.getElementById('terms4xCheck').checked;
+  document.getElementById('btnContinue4x').disabled = !(codeOk && termsOk);
+  state.termsAccepted = termsOk;
+}
+
+function startResendTimer() {
+  stopResendTimer();
+  state.resendSeconds = 30;
+  const seconds = document.getElementById('resendSeconds');
+  const line = document.getElementById('resendLine');
+  function render() {
+    if (state.resendSeconds <= 0) {
+      line.innerHTML = 'Não recebeu o código? <a class="link" onclick="resendWhatsappCode()">Reenviar</a>';
+      stopResendTimer();
+      return;
+    }
+    const m = Math.floor(state.resendSeconds / 60);
+    const s = state.resendSeconds % 60;
+    seconds.textContent = m + ':' + String(s).padStart(2,'0');
+  }
+  render();
+  state.resendHandle = setInterval(() => {
+    state.resendSeconds--;
+    render();
+  }, 1000);
+}
+
+function stopResendTimer() {
+  if (state.resendHandle) clearInterval(state.resendHandle);
+  state.resendHandle = null;
+}
+
+function resendWhatsappCode() {
+  showToast('Mockup: novo código enviado.');
+  document.getElementById('resendLine').innerHTML =
+    'Não recebeu o código? Reenvie em <span class="seconds" id="resendSeconds">0:30</span>';
+  startResendTimer();
+}
+
+/* ----------------------------------------------------------
+   TIMELINE (4x)
+---------------------------------------------------------- */
+function goToTimeline() {
+  renderTimeline();
+  showKoinStep('timeline');
+}
+
+function renderTimeline() {
+  const list = document.getElementById('timelineList');
+  const items = [
+    { label: 'Hoje',      desc: 'Entrada',       amount: 130.00, status: 'current' },
+    { label: 'Em 15 dias', desc: '2º pagamento', amount: 130.00, status: 'future' },
+    { label: 'Em 30 dias', desc: '3º pagamento', amount: 130.00, status: 'future' },
+    { label: 'Em 45 dias', desc: '4º pagamento', amount: 130.00, status: 'future' }
+  ];
+  list.innerHTML = items.map((it, i) => `
+    <div class="timeline-item ${it.status}">
+      <div class="timeline-dot">${i + 1}</div>
+      <div class="timeline-amount">${brl(it.amount)}</div>
+      <div class="timeline-when">${it.label}</div>
+      ${it.status === 'current' ? '<span class="timeline-current-pill">Agora</span>' : ''}
+    </div>
+  `).join('');
 }
 
 /* ----------------------------------------------------------
@@ -1902,6 +2804,7 @@ function showToast(msg) {
 ---------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
   bindFieldEvents();
+  applyMode();
 });
 </script>
 </body>
